@@ -39,3 +39,99 @@ Run directly in any repository (zero installation required):
 
 ```bash
 npx repoguard-rules init
+```
+
+Or install globally:
+
+```bash
+npm install -g repoguard-rules
+repoguard init
+```
+
+### What happens in 2 seconds:
+- 🔍 **Scans your tech stack** (Next.js, NestJS, Express, Python, Prisma, Tailwind, etc.).
+- 📝 **Generates tailored, strict `.cursorrules`** (for Cursor AI).
+- 🤖 **Generates a comprehensive `CLAUDE.md`** (for Claude Code).
+- 🌊 **Generates `.windsurfrules`** (for Windsurf IDE).
+- 🛡️ **Installs Git Pre-Commit Hooks & Architectural Health Checkers**.
+
+---
+
+## 🛠️ CLI Commands
+
+| Command | Description |
+| :--- | :--- |
+| `npx repoguard-rules init` | Scans codebase and generates all AI context rules. |
+| `npx repoguard-rules audit` | Evaluates entire codebase and returns an **Architectural Health Score (A+ to F)**. |
+| `npx repoguard-rules check` | Audits staged git diffs against architectural rules. |
+| `npx repoguard-rules install-hook` | Configures local `.git/hooks/pre-commit` to prevent rule breaches. |
+| `npx repoguard-rules list-rules` | Displays all 8 built-in architectural rules and descriptions. |
+
+---
+
+## 🛡️ The 8 Built-in Architectural Rules
+
+| Rule ID | Category | Severity | Guardrail Enforced |
+| :--- | :--- | :--- | :--- |
+| **RULE-01** | Architecture | Error | Prohibits raw ORM/DB queries in UI components and Controllers. |
+| **RULE-02** | Security | Critical | Flags hardcoded secrets, private keys, and API tokens. |
+| **RULE-03** | Type Safety | Warning | Forbids lazy `: any` and `as any` escape hatches. |
+| **RULE-04** | Code Quality | Info | Enforces structured logging instead of raw `console.log`. |
+| **RULE-05** | Next.js / SSR | Error | Prevents hydration mismatch from browser globals (`window`/`localStorage`). |
+| **RULE-06** | Security | Critical | Detects SQL injection hazards in raw query interpolations. |
+| **RULE-07** | API Design | Warning | Enforces Zod schema validation on incoming request payloads. |
+| **RULE-08** | DRY Principle | Info | Prevents AI assistants from duplicating existing common utility helpers. |
+| **RULE-PY-01** | Python / FastAPI | Warning / Critical | Enforces layer separation; forbids direct database queries and raw commits (`db.commit()`) inside route handlers. |
+
+---
+
+## 🤖 GitHub Action Integration
+
+Add continuous architectural enforcement to your CI/CD pipeline:
+
+```yaml
+# .github/workflows/repoguard.yml
+name: RepoGuard Architecture Audit
+on: [pull_request]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npx repoguard-rules audit
+```
+
+---
+
+## 💎 Plans & Enterprise Upgrades
+
+RepoGuard is 100% free and open-source for public repositories and local development. For automated CI/CD PR enforcement, private teams, and custom architectural rule engines:
+
+| Tier | Price | Ideal For | What's Included |
+| :--- | :--- | :--- | :--- |
+| **Open Source** | **$0** (Free Forever) | Solo builders & public repos | Unlimited local CLI scans, `.cursorrules`, `CLAUDE.md`, pre-commit hooks, 8 built-in rules |
+| **Developer Pro** | **$12** / month | Independent engineers & contractors | Unlimited private repositories, automated PR Review Bot, custom rules engine, secret leak detector |
+| **Engineering Team** | **$39** / month | Startups & engineering orgs | Up to 5 devs, GitHub Org-wide CI/CD merge blocker, SOC2 architecture audit logs, Slack/Discord alerts |
+
+👉 **[Subscribe to Developer Pro ($12/mo)](https://buy.stripe.com/dRm28tcsjcnC9On0kA6oo00)** • **[Upgrade Team ($39/mo)](https://buy.stripe.com/7sYbJ34ZRgDS1hR6IY6oo01)** • 🇧🇷 **[Pagar no PIX (R$ 67 à vista)](https://pay.kiwify.com.br/qeXPeY8)**
+
+---
+
+## 👥 Contributors & Community
+
+Special thanks to the open source engineers contributing to RepoGuard:
+
+- **[@taylormatematica-beep](https://github.com/taylormatematica-beep)** (Lead Maintainer & Author)
+- **[@NihalPN](https://github.com/NihalPN)** — Authored `RULE-PY-01` & FastAPI architectural guardrails (PR #3)
+
+## 🌟 Support & Community
+
+- 🌐 **Documentation & Live Hub:** [https://taylormatematica-beep.github.io/repoguard/](https://taylormatematica-beep.github.io/repoguard/)
+- 📦 **NPM Registry:** [https://www.npmjs.com/package/repoguard-rules](https://www.npmjs.com/package/repoguard-rules)
+- 🐱 **Product Hunt:** [https://www.producthunt.com/products/repoguard](https://www.producthunt.com/products/repoguard)
+
+If RepoGuard helps keep your AI coding clean, consider giving this repository a ⭐ **Star**!
