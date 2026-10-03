@@ -1,12 +1,13 @@
 /**
  * RepoGuard Architecture & Diff Analyzer Engine
- * Comprehensive 8-Rule Engine with AST/Regex Hybrid Matching
+ * Comprehensive Multi-Language Rule Engine (TypeScript, Python, Go)
+ * Version 1.6.0
  */
 
 const fs = require('fs');
 const path = require('path');
 
-// Complete 8 Architectural Rules
+// Complete Architectural Guardrails (TypeScript, Python, Golang, Security)
 const ARCHITECTURAL_RULES = [
   {
     id: 'RULE-01',
@@ -29,14 +30,44 @@ const ARCHITECTURAL_RULES = [
     suggestion: () => `return userService.get_users();`
   },
   {
+    id: 'RULE-GO-01',
+    name: 'Go Clean Architecture / No Raw DB Queries in HTTP Handlers',
+    severity: 'warning',
+    category: 'Architecture',
+    filePattern: /\.go$/i,
+    pattern: /\b(db|dbConn|database|session|gormDB)\.(Where|Find|First|Take|Last|Save|Create|Delete|Updates|Update|Exec|Raw|Query|QueryRow|Begin|Commit)\b/,
+    message: 'Direct database/ORM access detected inside an HTTP handler. Decouple database access into a repository or service layer.',
+    suggestion: () => `users, err := userRepository.FindActive(ctx);`
+  },
+  {
+    id: 'RULE-GO-02',
+    name: 'Unchecked Error Silenced via Blank Identifier',
+    severity: 'warning',
+    category: 'Error Handling',
+    filePattern: /\.go$/i,
+    pattern: /\b_\s*=\s*(err|err[A-Za-z0-9_]*)\b/,
+    message: 'Unchecked error discarded via blank identifier (`_ = err`). AI assistants often silence errors to bypass Go compiler strictness. Handle the error explicitly.',
+    suggestion: () => `if err != nil { return err }`
+  },
+  {
     id: 'RULE-02',
     name: 'Hardcoded Secret / Credential Leak',
     severity: 'critical',
     category: 'Security',
     filePattern: /\.(ts|tsx|js|jsx|py|go|env|json)$/i,
     pattern: /(api_key|secret|password|bearer|auth_token|private_key)\s*[:=]\s*["'][A-Za-z0-9_\-\.]{16,}["']/i,
-    message: 'Potential hardcoded secret or API credential detected. Secrets must be injected via environment variables (`process.env.*`).',
+    message: 'Potential hardcoded secret or API credential detected. Secrets must be injected via environment variables (`process.env.*` or `os.Getenv()`).',
     suggestion: () => `const secret = process.env.API_SECRET_KEY;`
+  },
+  {
+    id: 'RULE-09',
+    name: 'Client-Side Secret Exposure via Public Prefix',
+    severity: 'critical',
+    category: 'Security',
+    filePattern: /\.(ts|tsx|js|jsx|env|env\..*)$/i,
+    pattern: /(NEXT_PUBLIC|VITE|REACT_APP|PUBLIC)_[A-Z0-9_]*(SECRET|PRIVATE_KEY|PASSWORD|AUTH_TOKEN|API_SECRET)\b/i,
+    message: 'Publicly exposed client-side environment variable with sensitive prefix. Variables prefixed with NEXT_PUBLIC_ or VITE_ are bundled directly into browser-facing client JS.',
+    suggestion: () => `Access the secret server-side without the public prefix.`
   },
   {
     id: 'RULE-03',
@@ -73,9 +104,9 @@ const ARCHITECTURAL_RULES = [
     name: 'SQL Injection Vulnerability',
     severity: 'critical',
     category: 'Security',
-    filePattern: /\.(ts|tsx|js|jsx|py)$/i,
-    pattern: /(\$queryRawUnsafe|query\(|execute\()\s*[`"'].*\$\{.*\}.*[`"']/i,
-    message: 'Unsafe dynamic string interpolation detected in raw database query. Always use parameterized queries or tagged template literals to prevent SQL injection.',
+    filePattern: /\.(ts|tsx|js|jsx|py|go)$/i,
+    pattern: /(\$queryRawUnsafe|query\(|execute\(|db\.Raw\()\s*[`"'].*\$\{.*\}.*[`"']/i,
+    message: 'Unsafe dynamic string interpolation detected in raw database query. Always use parameterized queries to prevent SQL injection.',
     suggestion: () => `await prisma.$queryRaw\`SELECT * FROM users WHERE id = \${id}\`;`
   },
   {
@@ -101,7 +132,7 @@ const ARCHITECTURAL_RULES = [
 ];
 
 /**
- * Analyzes a diff or raw file content against architectural guardrails
+ * Analyzes Python FastAPI routes for direct DB operations
  */
 function analyzePythonFastAPIRoutes(content, filename) {
   const violations = [];
@@ -117,70 +148,39 @@ function analyzePythonFastAPIRoutes(content, filename) {
     const line = lines[i];
     if (isDiff && line.startsWith('@@ ')) {
       const match = line.match(/^\@\@ -\d+(?:,\d+)? \+(\d+)/);
-
-      if (match) {
-        currentLineNumber = Number(match[1]) - 1;
-      }
-
+      if (match) currentLineNumber = Number(match[1]) - 1;
       continue;
     }
-    // Ignore deleted lines from Git diffs.
-    if (line.startsWith('-') && !line.startsWith('---')) {
-      continue;
-    }
+    if (line.startsWith('-') && !line.startsWith('---')) continue;
 
-    // Remove the Git diff "+" marker from added lines.
     const cleanLine = line.startsWith('+') ? line.slice(1) : line;
-    if (isDiff) {
-      currentLineNumber++;
-    }
+    if (isDiff) currentLineNumber++;
     const trimmed = cleanLine.trim();
 
-    // Detect FastAPI route decorators.
     if (/^@(router|app)\.(get|post|put|delete|patch)\s*\(/i.test(trimmed)) {
       routeDecorator = true;
       continue;
     }
 
-    // The function immediately following the route decorator is the route handler.
-    if (
-      routeDecorator &&
-      /^(async\s+)?def\s+\w+\s*\(/.test(trimmed)
-    ) {
+    if (routeDecorator && /^(async\s+)?def\s+\w+\s*\(/.test(trimmed)) {
       insideRoute = true;
       routeDecorator = false;
       routeIndent = line.search(/\S/);
       continue;
     }
 
-    // Ignore blank lines.
-    if (!trimmed) {
-      continue;
-    }
+    if (!trimmed) continue;
 
     const indentation = line.search(/\S/);
-
-    // A new function/class at the same or lower indentation means
-    // the previous route has ended.
-    if (
-      insideRoute &&
-      indentation <= routeIndent &&
-      /^(async\s+)?(def|class)\s+\w+/.test(trimmed)
-    ) {
+    if (insideRoute && indentation <= routeIndent && /^(async\s+)?(def|class)\s+\w+/.test(trimmed)) {
       insideRoute = false;
     }
 
-    // If we are not inside a FastAPI route, do nothing.
-    if (!insideRoute) {
-      continue;
-    }
+    if (!insideRoute) continue;
 
-    const dbOperation =
-      /\b(db|session|connection)\.(query|execute|exec|scalars|add|delete|commit|flush|refresh)\s*\(/i;
-
+    const dbOperation = /\b(db|session|connection)\.(query|execute|exec|scalars|add|delete|commit|flush|refresh)\s*\(/i;
     if (dbOperation.test(trimmed)) {
       const isCommit = /\.commit\s*\(/i.test(trimmed);
-
       violations.push({
         ruleId: 'RULE-PY-01',
         ruleName: 'FastAPI Layer Separation / No Raw DB Queries in Routers',
@@ -200,25 +200,114 @@ function analyzePythonFastAPIRoutes(content, filename) {
   return violations;
 }
 
+/**
+ * Analyzes Go HTTP handlers (Gin, Fiber, Echo, net/http) for direct DB/GORM access
+ */
+function analyzeGolangHandlers(content, filename) {
+  const violations = [];
+  const lines = content.split('\n');
 
+  let insideHandler = false;
+  let handlerBraceCount = 0;
+  let currentLineNumber = 0;
+  let isDiff = lines.some(line => /^@@ /.test(line));
+
+  const isHandlerFile = /(handler|handlers|controller|controllers|routes|router)\b/i.test(filename) ||
+                        /(handler|controller)\.go$/i.test(filename);
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (isDiff && line.startsWith('@@ ')) {
+      const match = line.match(/^\@\@ -\d+(?:,\d+)? \+(\d+)/);
+      if (match) currentLineNumber = Number(match[1]) - 1;
+      continue;
+    }
+    if (line.startsWith('-') && !line.startsWith('---')) continue;
+
+    const cleanLine = line.startsWith('+') ? line.slice(1) : line;
+    if (isDiff) currentLineNumber++;
+    const trimmed = cleanLine.trim();
+
+    // Check for ignored errors (RULE-GO-02)
+    if (/\b_\s*=\s*(err|err[A-Za-z0-9_]*)\b/.test(trimmed)) {
+      violations.push({
+        ruleId: 'RULE-GO-02',
+        ruleName: 'Unchecked Error Silenced via Blank Identifier',
+        severity: 'warning',
+        category: 'Error Handling',
+        filename: filename,
+        lineNumber: isDiff ? currentLineNumber : i + 1,
+        codeSnippet: trimmed,
+        message: 'Unchecked error discarded via blank identifier (`_ = err`). AI assistants often silence errors to bypass Go compiler strictness. Handle the error explicitly.',
+        suggestion: 'if err != nil { return err }'
+      });
+    }
+
+    // Detect HTTP Handler function signature: Gin (*gin.Context), Fiber (*fiber.Ctx), Echo (echo.Context), or net/http
+    const isHandlerFunc = /func\s+(\([^)]+\)\s+)?\w+\s*\([^)]*(\*gin\.Context|\*fiber\.Ctx|echo\.Context|http\.ResponseWriter)[^)]*\)/i.test(trimmed);
+
+    if (isHandlerFunc || (isHandlerFile && /^func\s+(\([^)]+\)\s+)?\w+\s*\(/.test(trimmed))) {
+      insideHandler = true;
+      handlerBraceCount = (cleanLine.match(/{/g) || []).length - (cleanLine.match(/}/g) || []).length;
+      continue;
+    }
+
+    if (insideHandler) {
+      handlerBraceCount += (cleanLine.match(/{/g) || []).length - (cleanLine.match(/}/g) || []).length;
+      if (handlerBraceCount <= 0) {
+        insideHandler = false;
+      }
+    }
+
+    // Ignore lines if not inside an HTTP handler
+    if (!insideHandler) continue;
+
+    const dbOp = /\b(db|dbConn|database|session|gormDB)\.(Where|Find|First|Take|Last|Save|Create|Delete|Updates|Update|Exec|Raw|Query|QueryRow|Begin|Commit)\b/i;
+    if (dbOp.test(trimmed)) {
+      const isMutation = /\.(Exec|Commit|Delete|Save|Create)\b/i.test(trimmed);
+      violations.push({
+        ruleId: 'RULE-GO-01',
+        ruleName: 'Go Clean Architecture / No Raw DB Queries in HTTP Handlers',
+        severity: isMutation ? 'critical' : 'warning',
+        category: 'Architecture',
+        filename: filename,
+        lineNumber: isDiff ? currentLineNumber : i + 1,
+        codeSnippet: trimmed,
+        message: isMutation
+          ? 'Direct database mutation/transaction executed inside a Go HTTP handler. Database persistence must be encapsulated within a repository layer.'
+          : 'Direct database/ORM query detected inside a Go HTTP handler. Decouple database operations into a repository or service.',
+        suggestion: 'Delegate database operations to a repository layer (e.g. userRepo.FindActive(ctx)).'
+      });
+    }
+  }
+
+  return violations;
+}
+
+/**
+ * Analyzes a diff or raw file content against architectural guardrails
+ */
 function analyzeDiff(diffContent, filename) {
   const violations = [];
+
   if (/\.py$/i.test(filename)) {
     violations.push(...analyzePythonFastAPIRoutes(diffContent, filename));
+  } else if (/\.go$/i.test(filename)) {
+    violations.push(...analyzeGolangHandlers(diffContent, filename));
   }
+
   const lines = diffContent.split('\n');
   let currentLineNumber = 0;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
-    // Check additions in git diff or regular lines
     if (line.startsWith('+') || !line.startsWith('-')) {
       currentLineNumber++;
       const cleanLine = line.replace(/^\+/, '');
 
       for (const rule of ARCHITECTURAL_RULES) {
-        if (rule.id === 'RULE-PY-01') {
+        if (rule.id === 'RULE-PY-01' || rule.id === 'RULE-GO-01' || rule.id === 'RULE-GO-02') {
           continue;
         }
         if (rule.filePattern.test(filename) && rule.pattern.test(cleanLine)) {
@@ -242,21 +331,51 @@ function analyzeDiff(diffContent, filename) {
 }
 
 /**
- * Recursively scans all codebase files in a directory (ignoring node_modules, .git, etc.)
+ * Reads .repoguardignore file if present
  */
-function scanDirectory(dir, extensions = ['.ts', '.tsx', '.js', '.jsx', '.py']) {
-  const ignoreDirs = ['node_modules', '.git', 'dist', 'build', '.next', 'coverage', '.turbo'];
+function loadIgnoreList(rootDir) {
+  const defaultIgnores = [
+    'node_modules', '.git', 'dist', 'build', '.next', 'coverage',
+    '.turbo', 'venv', '.venv', 'vendor', '__pycache__', 'test/fixtures'
+  ];
+
+  const ignoreFile = path.join(rootDir, '.repoguardignore');
+  if (fs.existsSync(ignoreFile)) {
+    try {
+      const content = fs.readFileSync(ignoreFile, 'utf8');
+      const customIgnores = content
+        .split('\n')
+        .map(l => l.trim())
+        .filter(l => l && !l.startsWith('#'));
+      return [...new Set([...defaultIgnores, ...customIgnores])];
+    } catch (_) {}
+  }
+
+  return defaultIgnores;
+}
+
+/**
+ * Recursively scans all codebase files in a directory
+ */
+function scanDirectory(dir, extensions = ['.ts', '.tsx', '.js', '.jsx', '.py', '.go'], rootDir = dir) {
+  const ignoreDirs = loadIgnoreList(rootDir);
   let files = [];
 
   const items = fs.readdirSync(dir);
   for (const item of items) {
-    if (ignoreDirs.includes(item)) continue;
-
     const fullPath = path.join(dir, item);
-    const stat = fs.statSync(fullPath);
+    const relPath = path.relative(rootDir, fullPath).replace(/\\/g, '/');
 
+    const shouldIgnore = ignoreDirs.some(ign => {
+      const cleanIgn = ign.replace(/\/$/, '');
+      return item === cleanIgn || relPath === cleanIgn || relPath.startsWith(cleanIgn + '/');
+    });
+
+    if (shouldIgnore) continue;
+
+    const stat = fs.statSync(fullPath);
     if (stat.isDirectory()) {
-      files = files.concat(scanDirectory(fullPath, extensions));
+      files = files.concat(scanDirectory(fullPath, extensions, rootDir));
     } else if (extensions.some(ext => item.endsWith(ext))) {
       files.push(fullPath);
     }
@@ -306,20 +425,84 @@ function formatGitHubComment(violations) {
     comment += `- **File:** \`${v.filename}:${v.lineNumber}\`\n`;
     comment += `- **Category:** \`${v.category}\`\n`;
     comment += `- **Violation:** ${v.message}\n`;
-    comment += `\`\`\`typescript\n// Problematic code:\n${v.codeSnippet}\n\`\`\`\n\n`;
+    comment += `\`\`\`${v.filename.endsWith('.go') ? 'go' : v.filename.endsWith('.py') ? 'python' : 'typescript'}\n// Problematic code:\n${v.codeSnippet}\n\`\`\`\n\n`;
     if (v.suggestion) {
       comment += `> 💡 **Architectural Suggestion:**\n> \`${v.suggestion}\`\n\n`;
     }
   }
 
-  comment += `---\n*Audit enforced by [RepoGuard](https://repoguard.dev) • Protect your codebase from AI code rot.*`;
+  comment += `---\n*Audit enforced by [RepoGuard](https://taylormatematica-beep.github.io/repoguard/) • Protect your codebase from AI code rot.*`;
   return comment;
+}
+
+/**
+ * Formats violations into OASIS SARIF v2.1.0 for GitHub Code Scanning
+ */
+function formatSARIF(violations) {
+  const sarif = {
+    $schema: "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+    version: "2.1.0",
+    runs: [
+      {
+        tool: {
+          driver: {
+            name: "RepoGuard",
+            version: "1.6.0",
+            informationUri: "https://taylormatematica-beep.github.io/repoguard/",
+            rules: ARCHITECTURAL_RULES.map(r => ({
+              id: r.id,
+              name: r.name,
+              shortDescription: { text: r.name },
+              fullDescription: { text: r.message },
+              defaultConfiguration: {
+                level: r.severity === 'critical' || r.severity === 'error' ? 'error' : 'warning'
+              }
+            }))
+          }
+        },
+        results: violations.map(v => ({
+          ruleId: v.ruleId,
+          level: v.severity === 'critical' || v.severity === 'error' ? 'error' : 'warning',
+          message: { text: v.message },
+          locations: [
+            {
+              physicalLocation: {
+                artifactLocation: { uri: v.filename },
+                region: { startLine: v.lineNumber || 1 }
+              }
+            }
+          ]
+        }))
+      }
+    ]
+  };
+
+  return JSON.stringify(sarif, null, 2);
+}
+
+/**
+ * Formats violations into clean JSON for custom CI/CD pipelines
+ */
+function formatJSON(violations, healthScore, totalFiles) {
+  return JSON.stringify({
+    tool: "RepoGuard",
+    version: "1.6.0",
+    totalFiles,
+    healthScore: healthScore.score,
+    grade: healthScore.grade,
+    violationsCount: violations.length,
+    violations
+  }, null, 2);
 }
 
 module.exports = {
   analyzeDiff,
+  analyzeGolangHandlers,
   scanDirectory,
   calculateHealthScore,
   formatGitHubComment,
+  formatSARIF,
+  formatJSON,
+  loadIgnoreList,
   ARCHITECTURAL_RULES
 };
