@@ -615,6 +615,43 @@
       .price-box.featured { transform: scale(1); }
       .nav-links { display: none; }
     }
+
+    /* Interactive Playground */
+    .playground-preset-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #94a3b8;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-sans);
+    }
+    .playground-preset-btn:hover {
+      border-color: var(--accent-cyan);
+      color: #fff;
+    }
+    .playground-preset-btn.active {
+      background: rgba(0, 242, 254, 0.12);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+    .score-circle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      border: 3px solid var(--accent-cyan);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: var(--font-mono);
+    }
+
   </style>
 </head>
 <body>
@@ -699,6 +736,7 @@
             <button class="term-tab-btn active" id="btn-tab-audit" onclick="runTerminalCommand('audit')">npx repoguard audit</button>
             <button class="term-tab-btn" id="btn-tab-init" onclick="runTerminalCommand('init')">npx repoguard init</button>
             <button class="term-tab-btn" id="btn-tab-diff" onclick="runTerminalCommand('diff')">npx repoguard check</button>
+            <button class="term-tab-btn" id="btn-tab-fix" onclick="runTerminalCommand('fix')">npx repoguard fix</button>
           </div>
         </div>
 
@@ -727,6 +765,54 @@
 
     </div>
   </section>
+
+  <!-- Live Architecture Playground Section -->
+  <section class="comparison-section" id="playground" style="background: rgba(14, 19, 29, 0.6); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-tag">Interactive Sandbox</div>
+      <h2 class="section-title">Test Your Code in the Browser</h2>
+      <p class="section-subtitle">
+        Paste any code snippet or select a stack preset to see RepoGuard's 12-rule engine detect architectural drift in ~12ms.
+      </p>
+
+      <!-- Preset Pills -->
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px;">
+        <button class="playground-preset-btn active" id="p-btn-nextjs" onclick="loadPlaygroundPreset('nextjs')">⚛️ Next.js + Prisma</button>
+        <button class="playground-preset-btn" id="p-btn-golang" onclick="loadPlaygroundPreset('golang')">🐹 Golang + Gin GORM</button>
+        <button class="playground-preset-btn" id="p-btn-python" onclick="loadPlaygroundPreset('python')">🐍 FastAPI db.commit()</button>
+        <button class="playground-preset-btn" id="p-btn-secret" onclick="loadPlaygroundPreset('secret')">🚨 NEXT_PUBLIC Secret</button>
+        <button class="playground-preset-btn" id="p-btn-clean" onclick="loadPlaygroundPreset('clean')">✨ Clean Architecture (A+)</button>
+      </div>
+
+      <!-- Playground Dual Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;" class="playground-grid">
+        <!-- Editor Left -->
+        <div style="background: #090d16; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
+          <div style="background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <input type="text" id="playground-filename" value="src/components/UserProfile.tsx" style="background: transparent; border: none; color: #94a3b8; font-family: var(--font-mono); font-size: 0.85rem; width: 260px; outline: none;">
+            </div>
+            <span style="font-size: 0.75rem; color: #64748b; font-family: var(--font-mono);">Client Engine (12ms)</span>
+          </div>
+          <textarea id="playground-code" rows="13" style="background: transparent; border: none; color: #f8fafc; font-family: var(--font-mono); font-size: 0.88rem; padding: 16px; resize: none; outline: none; line-height: 1.5; width: 100%;"></textarea>
+          <div style="padding: 12px 16px; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: #64748b;">Zero server latency • Runs in-browser</span>
+            <button onclick="runPlaygroundAudit()" class="btn-cta-main" style="padding: 8px 20px; font-size: 0.88rem; border-radius: 8px; cursor: pointer;">
+              ⚡ Run Architecture Audit
+            </button>
+          </div>
+        </div>
+
+        <!-- Audit Output Right -->
+        <div id="playground-results" style="background: #090d16; border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+        </div>
+      </div>
+    </div>
+  </section>
+
 
   <!-- Side by Side Problem vs Solution -->
   <section class="comparison-section">
@@ -1139,6 +1225,24 @@ export default async function UserProfile({ id }: <span class="code-fix">UserPro
 <br>
 <div style="color:#fbbf24;">💡 Advice: Move DB query into /services/checkout.service.ts before committing.</div>
 <span class="cursor-blink"></span>
+`,
+      fix: `
+<div class="cmd-line"><span class="prompt-symbol">$</span> <span>npx repoguard-rules fix</span></div>
+<div style="color:#94a3b8;">🛠️ Analyzing codebase for architectural auto-fixes & refactoring plans...</div>
+<br>
+<div style="color:#00f2fe; font-weight:bold;">Found 2 items to refactor:</div>
+<div style="color:#64748b;">─── [RULE-01] src/components/UserProfile.tsx:14 ─────────────────────</div>
+<div style="color:#ef4444;">  ❌ Problematic: const user = await prisma.user.findUnique({ where: { id } });</div>
+<div style="color:#10b981;">  ✅ Suggested Fix: const user = await userService.getUserProfile(id);</div>
+<div style="color:#94a3b8;">  💡 Note: Direct DB access prohibited in UI. Move query to /services/user.service.ts</div>
+<br>
+<div style="color:#64748b;">─── [RULE-03] src/components/UserProfile.tsx:8 ──────────────────────</div>
+<div style="color:#ef4444;">  ❌ Problematic: export default function UserProfile({ id }: any)</div>
+<div style="color:#10b981;">  ✅ Suggested Fix: interface UserProps { id: string; }</div>
+<div style="color:#94a3b8;">  💡 Note: Replace lazy any with typed interface to preserve compile-time safety.</div>
+<br>
+<div style="color:#10b981; font-weight:bold;">✨ Run "npx repoguard fix" in your terminal to inspect actionable refactorings!</div>
+<span class="cursor-blink"></span>
 `
     };
 
@@ -1176,5 +1280,5 @@ export default async function UserProfile({ id }: <span class="code-fix">UserPro
       runTerminalCommand('audit');
     }
   </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44e7d4e39a399ea',t:'MTc5MTA1NzE2OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
