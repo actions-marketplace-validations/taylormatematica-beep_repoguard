@@ -511,12 +511,49 @@ if (command === 'init') {
     console.log(`    ${colors.dim}${r.message}${colors.reset}\n`);
   }
 
+} else if (command === 'fix') {
+  console.log(`${colors.cyan}🛠️  Analyzing codebase for architectural auto-fixes & refactoring plans...${colors.reset}\n`);
+
+  const files = scanDirectory(targetDir);
+  let allViolations = [];
+
+  for (const file of files) {
+    const relativePath = path.relative(targetDir, file);
+    try {
+      const content = fs.readFileSync(file, 'utf8');
+      const fileViolations = analyzeDiff(content, relativePath);
+      allViolations = allViolations.concat(fileViolations);
+    } catch (_) {}
+  }
+
+  if (allViolations.length === 0) {
+    console.log(`${colors.green}✨ Flawless architecture! No fixes or refactorings required.${colors.reset}\n`);
+    process.exit(0);
+  }
+
+  console.log(`${colors.bright}Found ${allViolations.length} item(s) to refactor:${colors.reset}\n`);
+
+  for (const v of allViolations) {
+    console.log(`${colors.dim}─── [${v.ruleId}] ${v.filename}:${v.lineNumber} ─────────────────────────────${colors.reset}`);
+    console.log(`  ${colors.red}❌ Problematic: ${v.codeSnippet}${colors.reset}`);
+    if (v.suggestion) {
+      console.log(`  ${colors.green}✅ Suggested Fix: ${v.suggestion}${colors.reset}`);
+    }
+    console.log(`  ${colors.dim}💡 Architectural Note: ${v.message}${colors.reset}\n`);
+  }
+
+  console.log(`${colors.dim}─────────────────────────────────────────────────────────────────────────────${colors.reset}`);
+  console.log(`💡 ${colors.bright}Need automated PR review bots & team CI enforcement?${colors.reset}`);
+  console.log(`   Upgrade to RepoGuard Pro ($12/mo): ${colors.cyan}https://taylormatematica-beep.github.io/repoguard/#pricing${colors.reset}`);
+  console.log(`${colors.dim}─────────────────────────────────────────────────────────────────────────────${colors.reset}\n`);
+
 } else {
   console.log(`Usage:
   ${colors.bright}npx repoguard init${colors.reset}                  Generate .cursorrules, CLAUDE.md & Windsurf rules (Go, Python, TypeScript)
   ${colors.bright}npx repoguard audit${colors.reset}                 Full codebase scan with Architectural Health Score (A+ to F)
   ${colors.bright}npx repoguard audit --format=sarif${colors.reset}  Export SARIF v2.1.0 report for GitHub Code Scanning
   ${colors.bright}npx repoguard audit --format=json${colors.reset}   Export machine-readable JSON for custom CI/CD pipelines
+  ${colors.bright}npx repoguard fix${colors.reset}                   Inspect and generate actionable architectural fixes
   ${colors.bright}npx repoguard diff${colors.reset}                  Audit uncommitted git changes in real-time
   ${colors.bright}npx repoguard hook install${colors.reset}          Install pre-commit hook to block AI drift locally
   ${colors.bright}npx repoguard review${colors.reset}                Simulate PR review audit for GitHub CI
