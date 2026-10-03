@@ -1,14 +1,23 @@
 #!/usr/bin/env node
 
 /**
- * RepoGuard CLI v1.2 — The Architecture Guardian for AI-Assisted Codebases
+ * RepoGuard CLI v1.6.0 — The Architecture Guardian for AI-Assisted Codebases
  * Zero-dependency standalone CLI tool
+ * Multi-Language Support: TypeScript/JavaScript, Python, Golang
  */
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const { analyzeDiff, scanDirectory, calculateHealthScore, formatGitHubComment, ARCHITECTURAL_RULES } = require('./analyzer');
+const {
+  analyzeDiff,
+  scanDirectory,
+  calculateHealthScore,
+  formatGitHubComment,
+  formatSARIF,
+  formatJSON,
+  ARCHITECTURAL_RULES
+} = require('./analyzer');
 const { runGitHubActionPRReview, generatePRReviewMarkdown } = require('./commenter');
 
 // ANSI Colors for Terminal Output
@@ -33,7 +42,7 @@ ${colors.cyan}${colors.bright}  ____                     ____                   
  |  _ <  __/ |_) | (_) | | |_| | |_| | (_| | | | (_| |
  |_| \\_\\___| .__/ \\___/   \\____|\\__,_|\\__,_|_|  \\__,_|
            |_|                                        ${colors.reset}
-  ${colors.dim}The Architecture Guardian for AI-assisted code • v1.2${colors.reset}
+  ${colors.dim}The Architecture Guardian for AI-assisted code • v1.6.0${colors.reset}
 `);
 }
 
@@ -47,6 +56,51 @@ function detectProjectStack(targetDir) {
     srcDir: fs.existsSync(path.join(targetDir, 'src')) ? 'src' : '.'
   };
 
+  // 1. Golang detection
+  const goModPath = path.join(targetDir, 'go.mod');
+  if (fs.existsSync(goModPath)) {
+    stack.language = 'Golang';
+    stack.framework = 'Go Standard Library';
+    try {
+      const goMod = fs.readFileSync(goModPath, 'utf8');
+      if (goMod.includes('github.com/gin-gonic/gin')) stack.framework = 'Gin (Go)';
+      else if (goMod.includes('github.com/gofiber/fiber')) stack.framework = 'Fiber (Go)';
+      else if (goMod.includes('github.com/labstack/echo')) stack.framework = 'Echo (Go)';
+
+      if (goMod.includes('gorm.io/gorm')) stack.orm = 'GORM';
+      else if (goMod.includes('github.com/jmoiron/sqlx')) stack.orm = 'sqlx';
+      else if (goMod.includes('database/sql')) stack.orm = 'database/sql';
+    } catch (_) {}
+    return stack;
+  }
+
+  // 2. Python detection
+  const pyprojectPath = path.join(targetDir, 'pyproject.toml');
+  const reqsPath = path.join(targetDir, 'requirements.txt');
+  const pipfilePath = path.join(targetDir, 'Pipfile');
+  const managePyPath = path.join(targetDir, 'manage.py');
+
+  if (fs.existsSync(pyprojectPath) || fs.existsSync(reqsPath) || fs.existsSync(pipfilePath) || fs.existsSync(managePyPath)) {
+    stack.language = 'Python';
+    stack.framework = 'Python Web';
+    let pyDeps = '';
+    if (fs.existsSync(pyprojectPath)) pyDeps += fs.readFileSync(pyprojectPath, 'utf8');
+    if (fs.existsSync(reqsPath)) pyDeps += fs.readFileSync(reqsPath, 'utf8');
+    if (fs.existsSync(pipfilePath)) pyDeps += fs.readFileSync(pipfilePath, 'utf8');
+
+    if (/fastapi/i.test(pyDeps)) stack.framework = 'FastAPI';
+    else if (/django/i.test(pyDeps) || fs.existsSync(managePyPath)) stack.framework = 'Django';
+    else if (/flask/i.test(pyDeps)) stack.framework = 'Flask';
+
+    if (/sqlmodel/i.test(pyDeps)) stack.orm = 'SQLModel';
+    else if (/sqlalchemy/i.test(pyDeps)) stack.orm = 'SQLAlchemy';
+    else if (/tortoise-orm/i.test(pyDeps)) stack.orm = 'Tortoise ORM';
+    else if (/peewee/i.test(pyDeps)) stack.orm = 'Peewee';
+
+    return stack;
+  }
+
+  // 3. Node.js / TypeScript detection
   const packageJsonPath = path.join(targetDir, 'package.json');
   if (fs.existsSync(packageJsonPath)) {
     try {
@@ -58,10 +112,10 @@ function detectProjectStack(targetDir) {
       }
 
       if (allDeps['next']) stack.framework = 'Next.js (App Router)';
-      else if (allDeps['react']) stack.framework = 'React';
       else if (allDeps['@nestjs/core']) stack.framework = 'NestJS';
       else if (allDeps['express']) stack.framework = 'Express';
       else if (allDeps['fastify']) stack.framework = 'Fastify';
+      else if (allDeps['react']) stack.framework = 'React';
 
       if (allDeps['@prisma/client'] || allDeps['prisma']) stack.orm = 'Prisma ORM';
       else if (allDeps['drizzle-orm']) stack.orm = 'Drizzle ORM';
@@ -71,13 +125,68 @@ function detectProjectStack(targetDir) {
       if (allDeps['tailwindcss']) stack.styling = 'Tailwind CSS';
       if (allDeps['vitest']) stack.testing = 'Vitest';
       else if (allDeps['jest']) stack.testing = 'Jest';
-    } catch (e) {}
+    } catch (_) {}
   }
 
   return stack;
 }
 
 function generateCursorRules(stack) {
+  if (stack.language === 'Golang') {
+    return `# RepoGuard Generated .cursorrules
+# Architecture Guardrails for AI Code Generation
+# Stack: ${stack.framework} | Language: Golang | ORM: ${stack.orm}
+
+You are an expert principal Go software engineer working on this repository.
+Follow these strictly enforced architectural guardrails:
+
+## 1. Clean Architecture & Layer Separation (RULE-GO-01)
+- NEVER execute direct database queries or GORM mutations inside HTTP handlers/controllers.
+- Delegate all database operations to dedicated repository interfaces (e.g., \`repository.UserRepository\`).
+- Handlers should only bind requests, invoke service/use-cases, and return HTTP status codes.
+
+## 2. Explicit Error Handling (RULE-GO-02)
+- NEVER discard errors with blank identifiers (\`_ = err\`).
+- Always handle errors explicitly using \`if err != nil { return err }\` or appropriate error wrapping (\`fmt.Errorf("...: %w", err)\`).
+
+## 3. Context Propagation
+- Always accept and propagate \`ctx context.Context\` as the first parameter in all service and database calls.
+
+## 4. Concurrency & Goroutine Safety
+- Always guard shared mutable state with \`sync.Mutex\` or channel pipelines.
+- Ensure goroutines terminate cleanly by listening to \`ctx.Done()\`.
+
+## 5. Security & Secrets (RULE-02)
+- Never hardcode tokens or database credentials. Inject via \`os.Getenv()\` or structured config.
+`;
+  }
+
+  if (stack.language === 'Python') {
+    return `# RepoGuard Generated .cursorrules
+# Architecture Guardrails for AI Code Generation
+# Stack: ${stack.framework} | Language: Python | ORM: ${stack.orm}
+
+You are an expert principal Python engineer working on this repository.
+Follow these strictly enforced architectural guardrails:
+
+## 1. Router & Layer Separation (RULE-PY-01)
+- NEVER execute direct database queries (\`db.query()\`) or transactions (\`db.commit()\`) inside route handlers.
+- Encapsulate all database queries and mutations inside dedicated service or repository modules.
+- Route functions must only handle HTTP parameters, invoke services, and return responses.
+
+## 2. Strict Type Annotations & Schemas
+- Define explicit Pydantic v2 schemas for all request payloads and response bodies.
+- Strictly type-annotate all function signatures (arguments and return types).
+
+## 3. Async/Await Hygiene
+- Do not mix blocking synchronous I/O inside asynchronous route handlers (\`async def\`). Use async drivers or run in threadpools.
+
+## 4. Security & Environment (RULE-02, RULE-06)
+- Never hardcode secrets. Inject via \`pydantic-settings\` or \`os.getenv()\`.
+- Always use parameterized ORM queries to prevent SQL injection.
+`;
+  }
+
   return `# RepoGuard Generated .cursorrules
 # Architecture Guardrails for AI Code Generation
 # Stack: ${stack.framework} | Language: ${stack.language} | ORM: ${stack.orm}
@@ -97,8 +206,9 @@ Follow these strictly enforced architectural principles:
 ## 3. Strict Type Safety (RULE-03)
 ${stack.language === 'TypeScript' ? '- NEVER use "any" or "as any". Define explicit interfaces or types under `types/`.\n- Use Zod schemas for all incoming API payloads.' : '- Maintain clear docstrings and typing annotations on all exported functions.'}
 
-## 4. Security & Sensitive Data (RULE-02, RULE-06)
+## 4. Security & Sensitive Data (RULE-02, RULE-06, RULE-09)
 - NEVER hardcode API keys, secrets, or database URLs in code. Always access via validated environment variables.
+- NEVER prefix private secrets with NEXT_PUBLIC_ or VITE_ (bundles into client browser JS).
 - NEVER concatenate raw strings in database queries. Always use parameterized queries.
 
 ## 5. SSR & Hydration (RULE-05)
@@ -114,13 +224,13 @@ function generateClaudeMd(stack) {
 - **Framework:** ${stack.framework}
 - **Language:** ${stack.language}
 - **Data Layer:** ${stack.orm}
-- **Styling:** ${stack.styling}
+- **Source Root:** ${stack.srcDir}/
 
 ## Core Rules for AI Agents:
-1. **No Layer Bypassing:** UI -> Service Layer -> Data Repository. Never skip directly to database operations.
-2. **Reuse Existing Utilities:** Do not invent new formatters or date helpers if already available in the codebase.
-3. **Zero Secrets:** Never write API keys or tokens in code; use environment variables.
-4. **Deterministic Error Handling:** Always wrap async external calls in typed try/catch blocks.
+1. **Strict Layer Separation:** Handlers/UI -> Service Layer -> Repository. Never bypass directly to the database.
+2. **Explicit Error Handling:** Never discard errors or use blind try/except passes.
+3. **Reuse Existing Utilities:** Do not invent new formatters or date helpers if already available in the codebase.
+4. **Zero Secrets in Code:** Never write API keys or tokens in code; use environment variables.
 5. **Git Commits:** Follow Conventional Commits format (\`feat:\`, \`fix:\`, \`refactor:\`, \`docs:\`).
 `;
 }
@@ -133,9 +243,9 @@ orm: ${stack.orm}
 
 rules:
   - id: layer-isolation
-    rule: "Controllers and React components must never import database/ORM clients directly."
-  - id: type-safety
-    rule: "Do not use 'any' type. Always define explicit interfaces."
+    rule: "HTTP Handlers and UI components must never execute direct database/ORM operations."
+  - id: explicit-errors
+    rule: "Never discard errors or suppress compiler checks."
   - id: dry-helpers
     rule: "Check existing helpers in utils/ before creating new functions."
 `;
@@ -144,9 +254,9 @@ rules:
 function generateCopilotInstructions(stack) {
   return `# GitHub Copilot Custom Instructions
 Follow the architectural layering of this repository:
-- Keep controllers thin and route logic to \`/services/\`.
-- Never execute database queries in UI components.
-- Avoid using 'any' types in TypeScript.
+- Keep controllers and route handlers thin; route business logic to service layers.
+- Never execute database queries in UI components or route functions.
+- Do not bypass type systems or error handling.
 `;
 }
 
@@ -193,7 +303,13 @@ if (process.env.GITHUB_ACTIONS === 'true' && (!args[0] || args[0] === 'ci' || ar
   return;
 }
 
-logBanner();
+const isJsonFormat = args.includes('--format=json');
+const isSarifFormat = args.includes('--format=sarif');
+const isStrict = args.includes('--strict');
+
+if (!isJsonFormat && !isSarifFormat) {
+  logBanner();
+}
 
 const targetDir = process.cwd();
 
@@ -232,9 +348,13 @@ if (command === 'init') {
 
   console.log(`${colors.bright}${colors.green}🎉 Setup Complete! Your codebase is now guarded across all major AI tools.${colors.reset}\n`);
 
+  console.log(`${colors.dim}─────────────────────────────────────────────────────────────────────────────${colors.reset}`);
+  console.log(`💡 ${colors.bright}Need automated PR review bots & team CI enforcement?${colors.reset}`);
+  console.log(`   Upgrade to RepoGuard Pro ($12/mo): ${colors.cyan}https://taylormatematica-beep.github.io/repoguard/#pricing${colors.reset}`);
+  console.log(`${colors.dim}─────────────────────────────────────────────────────────────────────────────${colors.reset}\n`);
+
 } else if (command === 'audit') {
-  console.log(`${colors.cyan}🔍 Scanning entire codebase for architectural violations...${colors.reset}\n`);
-  
+  const startTime = Date.now();
   const files = scanDirectory(targetDir);
   let allViolations = [];
 
@@ -244,15 +364,29 @@ if (command === 'init') {
       const content = fs.readFileSync(file, 'utf8');
       const fileViolations = analyzeDiff(content, relativePath);
       allViolations = allViolations.concat(fileViolations);
-    } catch (e) {}
+    } catch (_) {}
   }
 
   const { score, grade } = calculateHealthScore(files.length, allViolations);
+  const duration = Date.now() - startTime;
+
+  if (isSarifFormat) {
+    console.log(formatSARIF(allViolations));
+    process.exit(isStrict && allViolations.some(v => v.severity === 'critical' || v.severity === 'error') ? 1 : 0);
+  }
+
+  if (isJsonFormat) {
+    console.log(formatJSON(allViolations, { score, grade }, files.length));
+    process.exit(isStrict && allViolations.some(v => v.severity === 'critical' || v.severity === 'error') ? 1 : 0);
+  }
+
+  console.log(`${colors.cyan}🔍 Scanning entire codebase for architectural violations...${colors.reset}\n`);
 
   console.log(`====================================================`);
   console.log(`  ${colors.bright}ARCHITECTURAL HEALTH DASHBOARD${colors.reset}`);
   console.log(`====================================================`);
   console.log(`  Files Audited:    ${colors.bright}${files.length}${colors.reset}`);
+  console.log(`  Scan Duration:    ${colors.dim}${duration}ms [Zero-latency]${colors.reset}`);
   console.log(`  Total Violations: ${allViolations.length === 0 ? colors.green + '0' : colors.yellow + allViolations.length}${colors.reset}`);
   
   const scoreColor = score >= 85 ? colors.green : score >= 70 ? colors.yellow : colors.red;
@@ -273,6 +407,15 @@ if (command === 'init') {
     }
   } else {
     console.log(`${colors.green}✨ Flawless architecture! Zero drift detected across all files.${colors.reset}\n`);
+  }
+
+  console.log(`${colors.dim}─────────────────────────────────────────────────────────────────────────────${colors.reset}`);
+  console.log(`💡 ${colors.bright}Need automated PR review bots & team CI enforcement?${colors.reset}`);
+  console.log(`   Upgrade to RepoGuard Pro ($12/mo): ${colors.cyan}https://taylormatematica-beep.github.io/repoguard/#pricing${colors.reset}`);
+  console.log(`${colors.dim}─────────────────────────────────────────────────────────────────────────────${colors.reset}\n`);
+
+  if (isStrict && allViolations.some(v => v.severity === 'critical' || v.severity === 'error')) {
+    process.exit(1);
   }
 
 } else if (command === 'diff') {
@@ -334,7 +477,7 @@ if (command === 'init') {
 + }
 `;
   const violations = analyzeDiff(sampleDiff, 'src/controllers/order.controller.ts');
-  console.log(generatePRReviewMarkdown(violations, 8));
+  console.log(generatePRReviewMarkdown(violations, 10));
   console.log(`\n${colors.bright}${colors.yellow}Summary: Found ${violations.length} architectural issue(s) that would be reported in the PR!${colors.reset}\n`);
 
 } else if (command === 'rules') {
@@ -347,11 +490,13 @@ if (command === 'init') {
 
 } else {
   console.log(`Usage:
-  ${colors.bright}npx repoguard init${colors.reset}          Generate .cursorrules, CLAUDE.md & Windsurf rules
-  ${colors.bright}npx repoguard audit${colors.reset}         Full codebase scan with Architectural Health Score (A+ to F)
-  ${colors.bright}npx repoguard diff${colors.reset}          Audit uncommitted git changes in real-time
-  ${colors.bright}npx repoguard hook install${colors.reset}  Install pre-commit hook to block AI drift locally
-  ${colors.bright}npx repoguard review${colors.reset}        Simulate PR review audit for GitHub CI
-  ${colors.bright}npx repoguard rules${colors.reset}         List all 8 active architectural rules
+  ${colors.bright}npx repoguard init${colors.reset}                  Generate .cursorrules, CLAUDE.md & Windsurf rules (Go, Python, TypeScript)
+  ${colors.bright}npx repoguard audit${colors.reset}                 Full codebase scan with Architectural Health Score (A+ to F)
+  ${colors.bright}npx repoguard audit --format=sarif${colors.reset}  Export SARIF v2.1.0 report for GitHub Code Scanning
+  ${colors.bright}npx repoguard audit --format=json${colors.reset}   Export machine-readable JSON for custom CI/CD pipelines
+  ${colors.bright}npx repoguard diff${colors.reset}                  Audit uncommitted git changes in real-time
+  ${colors.bright}npx repoguard hook install${colors.reset}          Install pre-commit hook to block AI drift locally
+  ${colors.bright}npx repoguard review${colors.reset}                Simulate PR review audit for GitHub CI
+  ${colors.bright}npx repoguard rules${colors.reset}                 List all active architectural rules
 `);
 }
