@@ -1,15 +1,16 @@
 {
   "name": "repoguard-rules",
-  "version": "1.3.0",
-  "description": "The Architecture Guardian for AI-assisted codebases. Enforces clean layers, generates .cursorrules, CLAUDE.md & audits PRs in real-time.",
+  "version": "1.6.0",
+  "description": "The Architecture Guardian for AI-assisted codebases. Enforces clean layers, generates .cursorrules & CLAUDE.md for TypeScript, Python and Golang, and audits PRs in real-time.",
   "main": "bin/repoguard.js",
   "bin": {
     "repoguard-cli": "bin/repoguard.js",
     "repoguard": "bin/repoguard.js"
   },
   "scripts": {
-    "test": "node bin/repoguard.js audit",
-    "test:python-fastapi": "node test/python-fastapi.test.js"
+    "test": "node test/python-fastapi.test.js && node test/golang.test.js && node bin/repoguard.js audit",
+    "test:python-fastapi": "node test/python-fastapi.test.js",
+    "test:golang": "node test/golang.test.js"
   },
   "repository": {
     "type": "git",
@@ -25,9 +26,14 @@
     "linter",
     "devtools",
     "guardrails",
+    "golang",
+    "python",
+    "fastapi",
+    "typescript",
+    "sarif",
     "pre-commit"
   ],
-  "author": "Taylor Matem\u00e1tica",
+  "author": "Taylor Matemática",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/taylormatematica-beep/repoguard/issues"
