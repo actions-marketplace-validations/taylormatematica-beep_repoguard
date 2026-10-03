@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>RepoGuard v1.4.0 — Multi-Language Architecture Guardian (TypeScript, Python, Go)</title>
+  <title>RepoGuard v1.6.0 — Multi-Language Architecture Guardian (TypeScript, Python, Go)</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f2fe'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/></svg>">
   <style>
     :root {
@@ -631,7 +631,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
         RepoGuard
-        <span class="brand-badge"><span class="pulse-dot"></span> v1.4.0 Released (Python & Go)</span>
+        <span class="brand-badge"><span class="pulse-dot"></span> v1.6.0 Released (TypeScript, Python & Go)</span>
       </a>
 
       <div class="nav-links">
@@ -790,9 +790,9 @@ export default async function UserProfile({ id }: <span class="code-fix">UserPro
   <section class="comparison-section" id="rules" style="background: rgba(14, 19, 29, 0.4); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
     <div class="container">
       <div class="section-tag">Rules Engine</div>
-      <h2 class="section-title">8 Strict Architectural Guardrails</h2>
+      <h2 class="section-title">12 Strict Architectural Guardrails</h2>
       <p class="section-subtitle">
-        Zero config needed. RepoGuard evaluates your entire repository against these battle-tested standards.
+        Zero config needed. Multi-language architectural defense across TypeScript, Python, and Golang.
       </p>
 
       <div class="rules-grid">
@@ -807,11 +807,47 @@ export default async function UserProfile({ id }: <span class="code-fix">UserPro
 
         <div class="rule-card">
           <div class="rule-header">
+            <span class="rule-id">RULE-PY-01</span>
+            <span class="rule-pill pill-warning">Python</span>
+          </div>
+          <h4>FastAPI Layer Separation</h4>
+          <p>Prohibits direct ORM queries and raw database commits (<code>db.commit()</code>) inside FastAPI route handlers.</p>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-id">RULE-GO-01</span>
+            <span class="rule-pill pill-warning">Golang</span>
+          </div>
+          <h4>Go Clean Architecture</h4>
+          <p>Prohibits raw database/GORM mutations inside Gin, Fiber, or Echo HTTP handlers. Enforces repository pattern.</p>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-id">RULE-GO-02</span>
+            <span class="rule-pill pill-warning">Golang</span>
+          </div>
+          <h4>No Silenced Go Errors</h4>
+          <p>Catches errors discarded with blank identifiers (<code>_ = err</code>), preventing AI from suppressing compiler strictness.</p>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-header">
             <span class="rule-id">RULE-02</span>
             <span class="rule-pill pill-critical">Critical</span>
           </div>
           <h4>Secret Leak Blocker</h4>
           <p>Catches hardcoded API keys, tokens, and credentials before they get committed to GitHub.</p>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-id">RULE-09</span>
+            <span class="rule-pill pill-critical">Critical</span>
+          </div>
+          <h4>Client-Side Secret Exposure</h4>
+          <p>Detects sensitive credentials accidentally prefixed with <code>NEXT_PUBLIC_</code> or <code>VITE_</code> bundled into browser JS.</p>
         </div>
 
         <div class="rule-card">
@@ -875,7 +911,7 @@ export default async function UserProfile({ id }: <span class="code-fix">UserPro
   <section class="comparison-section" id="pr-bot">
     <div class="container">
       <div class="section-tag">GitHub Action Bot</div>
-      <h2 class="section-title">Automated PR Review Bot (v1.3)</h2>
+      <h2 class="section-title">Automated PR Review Bot (v1.6)</h2>
       <p class="section-subtitle">
         Every Pull Request gets audited inline with an interactive scorecard and exact code suggestions.
       </p>
@@ -1044,7 +1080,7 @@ export default async function UserProfile({ id }: <span class="code-fix">UserPro
 
   <footer>
     <div class="container footer-inner">
-      <div>RepoGuard v1.4.0 © 2026 • The Architecture Guardian for AI-assisted code.</div>
+      <div>RepoGuard v1.6.0 © 2026 • The Architecture Guardian for AI-assisted code.</div>
       <div style="display:flex; gap:20px;">
         <a href="https://github.com/taylormatematica-beep/repoguard" style="color:var(--text-dim); text-decoration:none;" target="_blank">GitHub</a>
         <a href="https://www.npmjs.com/package/repoguard-rules" style="color:var(--text-dim); text-decoration:none;" target="_blank">NPM</a>
