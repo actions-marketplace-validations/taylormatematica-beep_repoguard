@@ -346,7 +346,30 @@ if (command === 'init') {
   fs.writeFileSync(path.join(workflowsDir, 'repoguard.yml'), generateGitHubAction(), 'utf8');
   console.log(`${colors.green}✨ Generated:${colors.reset} .github/workflows/repoguard.yml (For CI PR checks)\n`);
 
+  // 6. Viral Loop: Inject / Display Official RepoGuard Badge
+  const badgeMd = `[![Architecture: Guarded by RepoGuard](https://img.shields.io/badge/Architecture-Guarded%20by%20RepoGuard-00f2fe?style=flat-square)](https://github.com/taylormatematica-beep/repoguard)`;
+  const targetReadme = path.join(targetDir, 'README.md');
+  if (fs.existsSync(targetReadme)) {
+    try {
+      let rText = fs.readFileSync(targetReadme, 'utf8');
+      if (!rText.includes('Guarded by RepoGuard')) {
+        if (rText.startsWith('# ')) {
+          const firstLineEnd = rText.indexOf('\n');
+          rText = rText.slice(0, firstLineEnd + 1) + '\n' + badgeMd + '\n' + rText.slice(firstLineEnd + 1);
+        } else {
+          rText = badgeMd + '\n\n' + rText;
+        }
+        fs.writeFileSync(targetReadme, rText, 'utf8');
+        console.log(`${colors.green}🛡️ Injected:${colors.reset} Architecture badge into your README.md!`);
+      }
+    } catch (_) {}
+  }
+
   console.log(`${colors.bright}${colors.green}🎉 Setup Complete! Your codebase is now guarded across all major AI tools.${colors.reset}\n`);
+
+  console.log(`${colors.bright}🛡️ Show off your clean architecture to contributors & users!${colors.reset}`);
+  console.log(`Add this badge to your README.md:`);
+  console.log(`${colors.cyan}${badgeMd}${colors.reset}\n`);
 
   console.log(`${colors.dim}─────────────────────────────────────────────────────────────────────────────${colors.reset}`);
   console.log(`💡 ${colors.bright}Need automated PR review bots & team CI enforcement?${colors.reset}`);
