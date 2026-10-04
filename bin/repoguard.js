@@ -547,6 +547,10 @@ if (command === 'init') {
   console.log(`   Upgrade to RepoGuard Pro ($12/mo): ${colors.cyan}https://taylormatematica-beep.github.io/repoguard/#pricing${colors.reset}`);
   console.log(`${colors.dim}─────────────────────────────────────────────────────────────────────────────${colors.reset}\n`);
 
+} else if (command === 'mcp') {
+  const { startMCPServer } = require('./mcp');
+  startMCPServer();
+
 } else {
   console.log(`Usage:
   ${colors.bright}npx repoguard init${colors.reset}                  Generate .cursorrules, CLAUDE.md & Windsurf rules (Go, Python, TypeScript)
@@ -554,6 +558,7 @@ if (command === 'init') {
   ${colors.bright}npx repoguard audit --format=sarif${colors.reset}  Export SARIF v2.1.0 report for GitHub Code Scanning
   ${colors.bright}npx repoguard audit --format=json${colors.reset}   Export machine-readable JSON for custom CI/CD pipelines
   ${colors.bright}npx repoguard fix${colors.reset}                   Inspect and generate actionable architectural fixes
+  ${colors.bright}npx repoguard mcp${colors.reset}                   Launch Model Context Protocol (MCP) server for Claude & Cursor
   ${colors.bright}npx repoguard diff${colors.reset}                  Audit uncommitted git changes in real-time
   ${colors.bright}npx repoguard hook install${colors.reset}          Install pre-commit hook to block AI drift locally
   ${colors.bright}npx repoguard review${colors.reset}                Simulate PR review audit for GitHub CI
