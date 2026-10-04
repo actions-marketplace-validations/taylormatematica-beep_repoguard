@@ -1,0 +1,29 @@
+name: CI & Architecture Guard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Unit Tests & Dogfood Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run Architecture & Stack Tests
+        run: npm test
+
+      - name: Dogfood Audit (RepoGuard on RepoGuard)
+        run: node bin/repoguard.js audit
