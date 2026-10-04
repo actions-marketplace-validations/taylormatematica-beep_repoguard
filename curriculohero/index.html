@@ -1121,12 +1121,12 @@ Requisitos Obrigatórios:
       return Array.from(new Set([...foundCompound, ...words]));
     }
 
-    function runATSAnalysis() {
+    function runATSAnalysis(isInitial) {
       const cv = document.getElementById('cv-text').value.trim();
       const job = document.getElementById('job-text').value.trim();
 
       if (!cv || !job) {
-        alert('Por favor, preencha o seu currículo e os requisitos da vaga para rodar a análise!');
+        if (!isInitial) alert('Por favor, preencha o seu currículo e os requisitos da vaga para rodar a análise!');
         return;
       }
 
@@ -1217,12 +1217,15 @@ Requisitos Obrigatórios:
       }
       document.getElementById('missing-count').innerText = `${missing.length} faltantes`;
 
-      // Smooth scroll to results
-      resultsBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Smooth scroll to results only when clicked
+      if (!isInitial) {
+        resultsBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
-    // Initialize with developer preset
+    // Initialize with developer preset and run immediate live audit demonstration
     loadPreset('dev');
+    runATSAnalysis(true);
   </script>
 
   <!-- MOBILE STICKY BOTTOM BAR -->
@@ -1237,5 +1240,5 @@ Requisitos Obrigatórios:
     </a>
   </aside>
 
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a450f5e8ddf031fd',t:'MTc5MTA4MzA4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
