@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Diagnóstico Oficial de Currículo — Teste de Risco ATS & Gupy</title>
-  <meta name="description" content="Descubra em 60 segundos se o seu currículo está sendo descartado automaticamente pelos robôs de seleção ou se tem chance real de entrevista.">
+  <meta name="description" content="Descubra em 90 segundos se o seu currículo está sendo descartado automaticamente pelos robôs de seleção ou se tem chance real de entrevista.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -28,8 +28,8 @@
       padding: 20px 16px 40px;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
-        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+        radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.18) 0%, transparent 65%),
+        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.12) 0%, transparent 50%);
     }
 
     .container {
@@ -41,7 +41,7 @@
     /* Header */
     .header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
     .badge-live {
       display: inline-flex;
@@ -72,7 +72,7 @@
       100% { transform: scale(0.9); opacity: 0.7; }
     }
     .main-title {
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       font-weight: 800;
       line-height: 1.25;
       color: #ffffff;
@@ -100,7 +100,7 @@
     }
     .progress-fill {
       height: 100%;
-      width: 25%;
+      width: 14%;
       background: linear-gradient(90deg, #6366f1, #10b981);
       border-radius: 999px;
       transition: width 0.35s ease;
@@ -133,7 +133,7 @@
     }
 
     .question-title {
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       font-weight: 700;
       color: #f8fafc;
       margin-bottom: 18px;
@@ -143,18 +143,18 @@
     .options-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 11px;
     }
     .option-btn {
       background: rgba(30, 41, 59, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 14px;
-      padding: 16px;
+      padding: 15px 16px;
       text-align: left;
       color: #e2e8f0;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
       font-weight: 600;
-      line-height: 1.4;
+      line-height: 1.35;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
@@ -176,7 +176,7 @@
     }
     .opt-sub {
       display: block;
-      font-size: 0.78rem;
+      font-size: 0.77rem;
       color: #94a3b8;
       font-weight: 400;
       margin-top: 3px;
@@ -202,7 +202,7 @@
       100% { transform: rotate(360deg); }
     }
     .loading-text {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: #ffffff;
       margin-bottom: 8px;
@@ -222,9 +222,9 @@
       background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(225, 29, 72, 0.05));
       border: 1px solid rgba(244, 63, 94, 0.35);
       border-radius: 16px;
-      padding: 20px;
+      padding: 22px 18px;
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
     .alert-tag {
       display: inline-block;
@@ -232,14 +232,14 @@
       color: #ffffff;
       font-size: 0.75rem;
       font-weight: 800;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 999px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .score-number {
-      font-size: 2.6rem;
+      font-size: 3rem;
       font-weight: 800;
       color: #f43f5e;
       line-height: 1;
@@ -256,8 +256,8 @@
       background: rgba(15, 23, 42, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 24px;
+      padding: 18px 16px;
+      margin-bottom: 22px;
     }
     .findings-title {
       font-size: 0.82rem;
@@ -265,7 +265,7 @@
       color: #94a3b8;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -274,10 +274,10 @@
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      font-size: 0.88rem;
+      font-size: 0.87rem;
       color: #cbd5e1;
       line-height: 1.4;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .finding-item:last-child {
       margin-bottom: 0;
@@ -285,7 +285,38 @@
     .item-icon {
       color: #f43f5e;
       font-weight: bold;
+      flex-shrink: 0;
+      margin-top: 1px;
     }
+
+    /* Reality Comparison */
+    .compare-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .compare-card {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+    .compare-card.bad {
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .compare-card.good {
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .compare-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .compare-card.bad .compare-tag { color: #f43f5e; }
+    .compare-card.good .compare-tag { color: #10b981; }
 
     /* Offer Box */
     .offer-box {
@@ -320,6 +351,7 @@
       font-size: 0.85rem;
       color: #94a3b8;
       margin-bottom: 16px;
+      line-height: 1.4;
     }
     .price-wrap {
       display: flex;
@@ -334,7 +366,7 @@
       text-decoration: line-through;
     }
     .price-now {
-      font-size: 2.1rem;
+      font-size: 2.2rem;
       font-weight: 800;
       color: #10b981;
       font-family: 'JetBrains Mono', monospace;
@@ -352,7 +384,7 @@
       margin-bottom: 20px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 9px;
     }
     .benefit-line {
       display: flex;
@@ -408,16 +440,16 @@
     <div class="header">
       <div class="badge-live">
         <span class="pulse-dot"></span>
-        Pesquisa Rápida • Diagnóstico ATS 2026
+        Auditoria de Currículo • Diagnóstico ATS 2026
       </div>
       <h1 class="main-title">Seu currículo é <span>descartado por robôs</span>?</h1>
-      <p class="subtitle">Responda 4 perguntas rápidas e descubra sua probabilidade real de aprovação na Gupy e plataformas ATS.</p>
+      <p class="subtitle">Responda 7 perguntas rápidas para mapear sua pontuação algorítmica na Gupy, Kenoby e sistemas ATS.</p>
     </div>
 
     <!-- Progress -->
     <div class="step-counter">
-      <span id="step-label">Etapa 1 de 4</span>
-      <span id="step-percent">25%</span>
+      <span id="step-label">Etapa 1 de 7</span>
+      <span id="step-percent">14%</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-fill" id="progress-bar"></div>
@@ -425,7 +457,7 @@
 
     <!-- Question Cards -->
     <div class="card" id="quiz-card">
-      <h2 class="question-title" id="question-text">Qual é o formato e design do seu currículo atual?</h2>
+      <h2 class="question-title" id="question-text">1. Como é a diagramação visual do seu currículo?</h2>
       <div class="options-list" id="options-container">
         <!-- Rendered dynamically -->
       </div>
@@ -434,34 +466,49 @@
     <!-- Loading State -->
     <div class="card loading-state" id="loading-card">
       <div class="scanner-spinner"></div>
-      <div class="loading-text" id="loading-title">Processando suas respostas...</div>
+      <div class="loading-text" id="loading-title">Analisando suas respostas...</div>
       <div class="loading-detail" id="loading-detail">Simulando parser OCR da Gupy e Kenoby...</div>
     </div>
 
     <!-- Result / Kiwify CTA -->
     <div class="card result-state" id="result-card">
       <div class="score-alert">
-        <span class="alert-tag">⚠️ Risco Crítico Detectado</span>
-        <div class="score-number" id="risk-score">84%</div>
-        <div class="score-desc">Probabilidade de descarte antes de um humano ler seu CV</div>
+        <span class="alert-tag">⚠️ Risco Crítico de Descarte</span>
+        <div class="score-number" id="risk-score">86%</div>
+        <div class="score-desc">Probabilidade de eliminação na triagem automática por IA</div>
+      </div>
+
+      <div class="compare-box">
+        <div class="compare-card bad">
+          <div class="compare-tag">❌ O Que o Robô Vê</div>
+          <p style="color:#94a3b8">Texto embaralhado, ícones ilegíveis e dados de contato truncados.</p>
+        </div>
+        <div class="compare-card good">
+          <div class="compare-tag">✅ Modelo Aprovado</div>
+          <p style="color:#94a3b8">100% de leitura limpa em 1 coluna e palavras-chave indexadas.</p>
+        </div>
       </div>
 
       <div class="findings-box">
         <div class="findings-title">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          Principais Falhas Identificadas no Diagnóstico:
+          Falhas Críticas Detectadas no seu Diagnóstico:
         </div>
         <div class="finding-item">
           <span class="item-icon">✕</span>
-          <div><strong>Parser Quebrado:</strong> Ícones visuais, colunas duplas ou tabelas bagunçam o leitor automático de texto do ATS.</div>
+          <div><strong>Parser Quebrado (Canva/Colunas):</strong> Modelos de 2 colunas fazem o leitor ATS misturar sua experiência com seus dados pessoais.</div>
         </div>
         <div class="finding-item">
           <span class="item-icon">✕</span>
-          <div><strong>Ausência de Palavras-Chave da Vaga:</strong> O robô atribui nota baixa quando não encontra os termos exatos do anúncio.</div>
+          <div><strong>Ausência de Métricas Quantitativas:</strong> Apenas listar tarefas diárias zera os pontos de impacto que a IA de triagem busca.</div>
         </div>
         <div class="finding-item">
           <span class="item-icon">✕</span>
-          <div><strong>Filtro Automático de 24h:</strong> Currículos sem estrutura padrão são eliminados na triagem primária da IA.</div>
+          <div><strong>Falta de Match de Palavras-Chave:</strong> Enviar o mesmo PDF para todas as vagas deixa seu score abaixo do ponto de corte.</div>
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Descarte em 10 Segundos:</strong> Currículos sem formato padrão são filtrados em lote antes de qualquer humano abrir o arquivo.</div>
         </div>
       </div>
 
@@ -484,7 +531,7 @@
           </div>
           <div class="benefit-line">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>Guia Definitivo Anti-Gupy (como pontuar 90%+)</span>
+            <span>Guia Definitivo Anti-Gupy (como atingir 90%+ de score)</span>
           </div>
           <div class="benefit-line">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
@@ -502,7 +549,7 @@
 
         <div class="guarantee-text">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Compra segura via Kiwify • Garantia incondicional de 7 dias
+          Compra 100% segura via Kiwify • Garantia incondicional de 7 dias
         </div>
       </div>
     </div>
@@ -514,40 +561,70 @@
         id: 1,
         title: "1. Como é a diagramação visual do seu currículo?",
         options: [
-          { icon: "🎨", text: "Feito no Canva com cores, ícones e 2 colunas", sub: "Design criativo com gráficos ou barras de nível", risk: 25 },
-          { icon: "📄", text: "Formato simples em 1 coluna só texto no Word", sub: "Estrutura direta sem caixas de texto", risk: 5 },
-          { icon: "📊", text: "Modelo com foto, tabela de habilidades e ícones", sub: "Telefone e e-mail representados por desenhos", risk: 25 },
-          { icon: "❓", text: "Não sei exatamente, peguei um modelo na internet", sub: "Nunca conferi a leitura em ATS", risk: 20 }
+          { icon: "🎨", text: "Feito no Canva com cores, ícones e 2 colunas", sub: "Design criativo com gráficos ou barras de nível", risk: 20 },
+          { icon: "📄", text: "Formato simples em 1 coluna só texto no Word", sub: "Estrutura direta sem caixas de texto", risk: 4 },
+          { icon: "📊", text: "Modelo com foto, tabela de habilidades e ícones", sub: "Telefone e e-mail representados por desenhos", risk: 20 },
+          { icon: "❓", text: "Não sei exatamente, peguei um modelo na internet", sub: "Nunca conferi a leitura em ATS", risk: 16 }
         ]
       },
       {
         id: 2,
         title: "2. Em quanto tempo você costuma receber 'Seu perfil não foi selecionado'?",
         options: [
-          { icon: "⚡", text: "Em menos de 24 a 48 horas após a inscrição", sub: "Sinal clássico de corte 100% algorítmico", risk: 25 },
-          { icon: "⏳", text: "Demora semanas ou nunca recebo resposta", sub: "Fica esquecido no banco de talentos sem pontuação", risk: 20 },
-          { icon: "✉️", text: "Já recebi recusa no final de semana ou de madrugada", sub: "Robô processou o descarte em lote", risk: 25 },
-          { icon: "🎯", text: "Raramente recebo chamadas para primeira entrevista", sub: "Conversão de currículo abaixo de 2%", risk: 20 }
+          { icon: "⚡", text: "Em menos de 24 a 48 horas após a inscrição", sub: "Sinal clássico de corte 100% algorítmico", risk: 20 },
+          { icon: "⏳", text: "Demora semanas ou nunca recebo resposta", sub: "Fica esquecido no banco de talentos sem pontuação", risk: 15 },
+          { icon: "✉️", text: "Já recebi recusa no final de semana ou de madrugada", sub: "Robô processou o descarte em lote", risk: 20 },
+          { icon: "🎯", text: "Raramente recebo chamadas para primeira entrevista", sub: "Taxa de retorno do currículo abaixo de 2%", risk: 16 }
         ]
       },
       {
         id: 3,
-        title: "3. Você costuma adaptar palavras-chave para cada anúncio de vaga?",
+        title: "3. Quantas páginas tem o seu currículo atualmente?",
         options: [
-          { icon: "📁", text: "Não, envio exatamente o mesmo PDF para todas", sub: "Zero personalização para o filtro semântico da vaga", risk: 25 },
-          { icon: "✏️", text: "Tento mudar um pouco, mas dá muito trabalho", sub: "Adaptação parcial e inconsistente", risk: 15 },
-          { icon: "🤖", text: "Não sei como achar as palavras-chave certas da vaga", sub: "Dificuldade em identificar o que a IA busca", risk: 20 },
-          { icon: "✅", text: "Sim, adapto manualmente cada um", sub: "Boa prática, mas consome horas", risk: 5 }
+          { icon: "📚", text: "3 páginas ou mais (coloco todo o histórico e cursos)", sub: "IA dilui a pontuação semântica pelo excesso de texto", risk: 18 },
+          { icon: "📄", text: "1 a 2 páginas objetivas e focadas na área", sub: "Padrão recomendado pelas consultorias de RH", risk: 3 },
+          { icon: "🔍", text: "1 página, mas com a letra bem pequena para caber tudo", sub: "Parsers de OCR falham com fontes muito comprimidas", risk: 14 },
+          { icon: "🤷", text: "Não tenho certeza de quantas páginas deu", sub: "Falta de controle de densidade", risk: 15 }
         ]
       },
       {
         id: 4,
-        title: "4. Qual formato de arquivo você envia na candidatura?",
+        title: "4. Como você descreve as suas experiências profissionais?",
         options: [
-          { icon: "🖼️", text: "PDF exportado direto do Canva", sub: "Muitas vezes texto é achatado como imagem e fica ilegível", risk: 25 },
-          { icon: "📝", text: "Arquivo .DOCX (Word)", sub: "Alta legibilidade pelo leitor ATS", risk: 5 },
-          { icon: "📄", text: "PDF limpo gerado pelo Word ou Google Docs", sub: "Texto selecionável e rastreável", risk: 5 },
-          { icon: "📷", text: "Imagem (PNG/JPEG) ou print", sub: "Descarte imediato em 100% dos sistemas ATS", risk: 25 }
+          { icon: "📋", text: "Apenas listo funções ('responsável por atender clientes, planilhas')", sub: "Linguagem passiva que não pontua na IA de ranqueamento", risk: 18 },
+          { icon: "📈", text: "Coloco números e métricas ('aumento de 20% em vendas')", sub: "Aciona match por verbos de ação e impacto", risk: 3 },
+          { icon: "📖", text: "Parágrafos longos contando a história da empresa", sub: "Robôs truncam textos densos e perdem dados", risk: 16 },
+          { icon: "💼", text: "Copio e colo a descrição da carteira de trabalho", sub: "Sem diferenciação ou termos técnicos do anúncio", risk: 18 }
+        ]
+      },
+      {
+        id: 5,
+        title: "5. Você costuma adaptar palavras-chave para cada anúncio de vaga?",
+        options: [
+          { icon: "📁", text: "Não, envio exatamente o mesmo PDF para todas", sub: "Zero correspondência aos termos específicos da vaga", risk: 20 },
+          { icon: "✏️", text: "Tento mudar um pouco, mas dá muito trabalho", sub: "Adaptação incompleta que não alcança a nota de corte", risk: 14 },
+          { icon: "🤖", text: "Não sei como encontrar as palavras-chave da vaga", sub: "Dificuldade em mapear termos procurados pelo ATS", risk: 18 },
+          { icon: "✅", text: "Sim, analiso o anúncio e adapto manualmente", sub: "Boa prática, porém demorada", risk: 4 }
+        ]
+      },
+      {
+        id: 6,
+        title: "6. Seu currículo possui fotos, tabelas ou ícones de contato?",
+        options: [
+          { icon: "🖼️", text: "Sim, tem foto e ícones bonitinhos de telefone/e-mail", sub: "O robô não lê imagens de ícone e quebra seu contato", risk: 20 },
+          { icon: "📊", text: "Tem tabelas para separar as seções", sub: "Tabelas travam o algoritmo de leitura sequencial", risk: 18 },
+          { icon: "📝", text: "Não, apenas texto simples e limpo digitado", sub: "100% legível por leitores de máquina", risk: 3 },
+          { icon: "❓", text: "Não lembro se o template tinha tabela ou caixa de texto", sub: "Risco alto de incompatibilidade oculta", risk: 15 }
+        ]
+      },
+      {
+        id: 7,
+        title: "7. Você já recebeu algum feedback humano explicando sua recusa?",
+        options: [
+          { icon: "🤖", text: "Nunca! Sempre recebo a mesma mensagem automática", sub: "Confirmação de descarte algorítmico 100% frio", risk: 20 },
+          { icon: "👻", text: "Quase nunca, a maioria das empresas dá 'vácuo'", sub: "Currículo caiu na base morta de talentos", risk: 18 },
+          { icon: "📞", text: "Sim, o recrutador já me ligou com feedback detalhado", sub: "Perfil passou pela triagem inicial", risk: 4 },
+          { icon: "🎯", text: "Envio dezenas de currículos e não sou chamado pra nada", sub: "Gargalo total na primeira etapa de triagem", risk: 20 }
         ]
       }
     ];
@@ -606,10 +683,11 @@
       loadingCard.style.display = 'block';
 
       const steps = [
-        "Simulando leitura de OCR da Gupy...",
-        "Calculando densidade de palavras-chave...",
-        "Verificando separação de colunas e tabelas...",
-        "Calculando probabilidade de descarte automático..."
+        "Auditando formatação de colunas e leitura de OCR...",
+        "Calculando densidade de palavras-chave da vaga...",
+        "Simulando filtro de triagem automática da Gupy e Kenoby...",
+        "Avaliando legibilidade de métricas e verbos de ação...",
+        "Consolidando diagnóstico de probabilidade de entrevista..."
       ];
 
       let idx = 0;
@@ -621,20 +699,20 @@
           clearInterval(interval);
           showResult();
         }
-      }, 500);
+      }, 450);
     }
 
     function showResult() {
       loadingCard.style.display = 'none';
       resultCard.style.display = 'block';
 
-      // Minimum calculated risk is bounded between 68% and 94% for high realism
-      let finalRisk = Math.min(94, Math.max(68, accumulatedRisk));
+      // Minimum calculated risk is bounded between 72% and 94% for high realism
+      let finalRisk = Math.min(94, Math.max(72, Math.round(accumulatedRisk * 0.75)));
       riskScore.textContent = `${finalRisk}%`;
     }
 
     // Initialize
     renderQuestion();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a457a16b8d165035',t:'MTc5MTE1MzAyMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
