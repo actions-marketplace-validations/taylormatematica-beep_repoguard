@@ -1,0 +1,26 @@
+# RepoGuard Generated .cursorrules
+# Architecture Guardrails for AI Code Generation
+# Stack: Node.js / Universal | Language: JavaScript | ORM: None detected
+
+You are an expert principal software engineer working on this repository.
+Follow these strictly enforced architectural principles:
+
+## 1. Architectural Boundaries & Layering (RULE-01)
+- NEVER import database clients or ORM models (None detected) directly inside UI components or API controllers.
+- Always encapsulate data mutations and queries inside dedicated service modules under `./services` or `./lib`.
+- Keep components focused strictly on presentation and state handling.
+
+## 2. Code Reusability & DRY Policy (RULE-08)
+- Before creating a new helper function, check existing utilities under `./utils` or `./helpers`.
+- Do not duplicate standard validators (e.g. email, date formatting, slugify). Reuse the centralized ones.
+
+## 3. Strict Type Safety (RULE-03)
+- Maintain clear docstrings and typing annotations on all exported functions.
+
+## 4. Security & Sensitive Data (RULE-02, RULE-06, RULE-09)
+- NEVER hardcode API keys, secrets, or database URLs in code. Always access via validated environment variables.
+- NEVER prefix private secrets with NEXT_PUBLIC_ or VITE_ (bundles into client browser JS).
+- NEVER concatenate raw strings in database queries. Always use parameterized queries.
+
+## 5. SSR & Hydration (RULE-05)
+- NEVER access `window` or `localStorage` directly in Server Components or top-level file scopes.
