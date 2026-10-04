@@ -17,7 +17,8 @@
 
 <p align="center">
   <a href="https://github.com/taylormatematica-beep/repoguard/stargazers"><img src="https://img.shields.io/github/stars/taylormatematica-beep/repoguard?style=social" alt="GitHub Stars"></a>
-  <a href="https://www.npmjs.com/package/repoguard-rules"><img src="https://img.shields.io/npm/v/repoguard-rules?style=flat-square&color=00f2fe&label=npm%20v1.6.0" alt="npm version"></a>
+  <a href="https://github.com/taylormatematica-beep/repoguard/actions/workflows/ci.yml"><img src="https://github.com/taylormatematica-beep/repoguard/actions/workflows/ci.yml/badge.svg" alt="CI & Architecture Guard"></a>
+  <a href="https://www.npmjs.com/package/repoguard-rules"><img src="https://img.shields.io/npm/v/repoguard-rules?style=flat-square&color=00f2fe&label=npm%20v1.6.1" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/repoguard-rules"><img src="https://img.shields.io/npm/dm/repoguard-rules?style=flat-square&color=10b981&label=downloads" alt="downloads"></a>
   <a href="https://github.com/marketplace/actions/repoguard-architecture-audit"><img src="https://img.shields.io/badge/GitHub%20Marketplace-Action-blue?logo=github&style=flat-square" alt="Marketplace"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"></a>
@@ -37,7 +38,7 @@ AI coding assistants (**Cursor, GitHub Copilot, Claude Code, Windsurf**) write 3
 3. **Escape Type Safety & Error Handling:** Scatter `: any` in TypeScript or discard errors with `_ = err` in Go to pass quick compilation.
 4. **Leak Sensitive Secrets:** Hardcode mock API keys or prefix private secrets with `NEXT_PUBLIC_`, bundling them into client-side JS.
 
-RepoGuard acts as an automated architecture supervisor: it generates strict, customized `.cursorrules`, `CLAUDE.md`, and `.windsurfrules` context files, verifies pre-commit diffs in ~12ms, and runs inline audits on every Pull Request.
+RepoGuard acts as an automated architecture supervisor: it generates strict, customized `.cursorrules`, `CLAUDE.md`, and `.windsurfrules` context files, verifies pre-commit diffs in ~12ms, runs an MCP server for live agent consultation, and performs inline audits on every Pull Request.
 
 ---
 
@@ -66,12 +67,48 @@ repoguard init
 
 ---
 
+## 🤖 Native MCP Server (Model Context Protocol)
+
+RepoGuard v1.6.1 features a zero-dependency, JSON-RPC 2.0 stdio **MCP Server**. Connect it to **Cursor**, **Claude Desktop**, or any MCP-compatible coding client so your AI agent can audit code and verify guardrails autonomously:
+
+### 1. Cursor Configuration (`~/.cursor/mcp.json` or `.cursor/mcp.json`):
+```json
+{
+  "mcpServers": {
+    "repoguard": {
+      "command": "npx",
+      "args": ["-y", "repoguard-rules@1.6.1", "mcp"]
+    }
+  }
+}
+```
+
+### 2. Claude Desktop Configuration (`claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "repoguard": {
+      "command": "npx",
+      "args": ["-y", "repoguard-rules@1.6.1", "mcp"]
+    }
+  }
+}
+```
+
+### Available MCP Tools:
+- **`repoguard_audit`**: Performs a comprehensive architectural audit of the project root and returns health metrics and grade (A+ to F).
+- **`repoguard_get_rules`**: Retrieves all built-in guardrails for TypeScript, Python, and Go for LLM prompt context injection.
+- **`repoguard_analyze_diff`**: Analyzes a code diff or snippet before writing to disk, catching violations before they happen.
+
+---
+
 ## 🛠️ CLI Commands & Formats
 
 | Command | Description |
 | :--- | :--- |
 | `npx repoguard-rules init` | Scans codebase and generates tailored AI context files. |
 | `npx repoguard-rules audit` | Evaluates entire codebase and returns an **Architectural Health Score (A+ to F)**. |
+| `npx repoguard-rules mcp` | Starts the Model Context Protocol stdio server for Claude & Cursor. |
 | `npx repoguard-rules fix` | Interactively inspects violations and outputs refactoring plans. |
 | `npx repoguard-rules audit --format=sarif` | Generates standard OASIS SARIF v2.1.0 for **GitHub Code Scanning** integration. |
 | `npx repoguard-rules audit --format=json` | Outputs machine-readable JSON for custom CI/CD pipelines. |
@@ -112,22 +149,36 @@ test/fixtures/
 
 ## 🤖 GitHub Action & Security Integration
 
-Add continuous architectural enforcement to your CI/CD pipeline using the official Marketplace Action:
+RepoGuard dogfoods its own architecture on every push. You can add continuous architectural enforcement to your CI/CD pipeline using the official Action:
 
 ```yaml
-# .github/workflows/repoguard.yml
-name: RepoGuard Architecture Audit
-on: [pull_request]
+# .github/workflows/ci.yml
+name: CI & Architecture Guard
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   audit:
+    name: Unit Tests & Dogfood Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npx repoguard-rules audit --strict
+
+      - name: Run Architecture & Stack Tests
+        run: npm test
+
+      - name: Dogfood Audit (RepoGuard on RepoGuard)
+        run: node bin/repoguard.js audit --strict
 ```
 
 ### GitHub Code Scanning (SARIF v2.1.0):
@@ -146,7 +197,7 @@ RepoGuard is 100% free and open-source for public repositories and local develop
 
 | Tier | Price | Ideal For | What's Included |
 | :--- | :--- | :--- | :--- |
-| **Open Source** | **$0** (Free Forever) | Solo builders & public repos | Unlimited local CLI scans, `.cursorrules`, `CLAUDE.md`, pre-commit hooks, all 12 built-in rules |
+| **Open Source** | **$0** (Free Forever) | Solo builders & public repos | Unlimited local CLI scans, `.cursorrules`, `CLAUDE.md`, MCP Server, pre-commit hooks, all 12 built-in rules |
 | **Developer Pro** | **$12** / month | Independent engineers & contractors | Unlimited private repositories, automated PR Review Bot, custom rules engine, secret leak detector |
 | **Engineering Team** | **$39** / month | Startups & engineering orgs | Up to 5 devs, GitHub Org-wide CI/CD merge blocker, SOC2 architecture audit logs, Slack/Discord alerts |
 
