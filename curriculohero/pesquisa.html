@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Diagnóstico Oficial de Currículo — Teste de Risco ATS & Gupy</title>
+  <meta name="description" content="Descubra em 60 segundos se o seu currículo está sendo descartado automaticamente pelos robôs de seleção ou se tem chance real de entrevista.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #070a13;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 16px 40px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+    .main-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .main-title span {
+      background: linear-gradient(135deg, #f43f5e, #fb7185);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      height: 6px;
+      width: 100%;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 25%;
+      background: linear-gradient(90deg, #6366f1, #10b981);
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+    .step-counter {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Card Question */
+    .card {
+      background: rgba(18, 24, 38, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 24px 20px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .question-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 18px;
+      line-height: 1.35;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option-btn {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: left;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.4;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .option-btn:hover, .option-btn:active {
+      background: rgba(99, 102, 241, 0.18);
+      border-color: #6366f1;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+    }
+    .opt-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .opt-text {
+      flex: 1;
+    }
+    .opt-sub {
+      display: block;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 400;
+      margin-top: 3px;
+    }
+
+    /* Loading State */
+    .loading-state {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .scanner-spinner {
+      width: 70px;
+      height: 70px;
+      border: 4px solid rgba(99, 102, 241, 0.2);
+      border-top: 4px solid #10b981;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 24px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .loading-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .loading-detail {
+      font-size: 0.85rem;
+      color: #34d399;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Result State */
+    .result-state {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .score-alert {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(225, 29, 72, 0.05));
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .alert-tag {
+      display: inline-block;
+      background: #f43f5e;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+    .score-number {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #f43f5e;
+      line-height: 1;
+      margin-bottom: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .score-desc {
+      font-size: 0.95rem;
+      color: #fda4af;
+      font-weight: 600;
+    }
+
+    .findings-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    .findings-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .finding-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .finding-item:last-child {
+      margin-bottom: 0;
+    }
+    .item-icon {
+      color: #f43f5e;
+      font-weight: bold;
+    }
+
+    /* Offer Box */
+    .offer-box {
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 18px;
+      padding: 22px 18px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .offer-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #10b981;
+      color: #052e16;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-bottom-left-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .offer-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .offer-sub {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+    .price-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .price-old {
+      font-size: 0.95rem;
+      color: #64748b;
+      text-decoration: line-through;
+    }
+    .price-now {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #10b981;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .price-pix {
+      font-size: 0.85rem;
+      color: #34d399;
+      font-weight: 700;
+    }
+
+    .benefits-list {
+      text-align: left;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .benefit-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .benefit-line svg {
+      width: 16px;
+      height: 16px;
+      stroke: #10b981;
+      flex-shrink: 0;
+    }
+
+    /* Pulsing CTA button */
+    .cta-btn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 800;
+      padding: 18px 20px;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.5);
+      animation: ctaPulse 2s infinite;
+      transition: all 0.2s;
+    }
+    @keyframes ctaPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1.02); box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .cta-btn:active {
+      transform: scale(0.98);
+    }
+    .guarantee-text {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="badge-live">
+        <span class="pulse-dot"></span>
+        Pesquisa Rápida • Diagnóstico ATS 2026
+      </div>
+      <h1 class="main-title">Seu currículo é <span>descartado por robôs</span>?</h1>
+      <p class="subtitle">Responda 4 perguntas rápidas e descubra sua probabilidade real de aprovação na Gupy e plataformas ATS.</p>
+    </div>
+
+    <!-- Progress -->
+    <div class="step-counter">
+      <span id="step-label">Etapa 1 de 4</span>
+      <span id="step-percent">25%</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progress-bar"></div>
+    </div>
+
+    <!-- Question Cards -->
+    <div class="card" id="quiz-card">
+      <h2 class="question-title" id="question-text">Qual é o formato e design do seu currículo atual?</h2>
+      <div class="options-list" id="options-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="card loading-state" id="loading-card">
+      <div class="scanner-spinner"></div>
+      <div class="loading-text" id="loading-title">Processando suas respostas...</div>
+      <div class="loading-detail" id="loading-detail">Simulando parser OCR da Gupy e Kenoby...</div>
+    </div>
+
+    <!-- Result / Kiwify CTA -->
+    <div class="card result-state" id="result-card">
+      <div class="score-alert">
+        <span class="alert-tag">⚠️ Risco Crítico Detectado</span>
+        <div class="score-number" id="risk-score">84%</div>
+        <div class="score-desc">Probabilidade de descarte antes de um humano ler seu CV</div>
+      </div>
+
+      <div class="findings-box">
+        <div class="findings-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Principais Falhas Identificadas no Diagnóstico:
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Parser Quebrado:</strong> Ícones visuais, colunas duplas ou tabelas bagunçam o leitor automático de texto do ATS.</div>
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Ausência de Palavras-Chave da Vaga:</strong> O robô atribui nota baixa quando não encontra os termos exatos do anúncio.</div>
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Filtro Automático de 24h:</strong> Currículos sem estrutura padrão são eliminados na triagem primária da IA.</div>
+        </div>
+      </div>
+
+      <!-- Offer Box -->
+      <div class="offer-box">
+        <span class="offer-badge">Acesso Imediato</span>
+        <h3 class="offer-title">Destrave Suas Entrevistas Hoje</h3>
+        <p class="offer-sub">Baixe os modelos oficiais aprovados nos robôs ATS + Prompts de IA para adaptar palavras-chave em 3 minutos.</p>
+
+        <div class="price-wrap">
+          <span class="price-old">De R$ 97</span>
+          <span class="price-now">R$ 27</span>
+          <span class="price-pix">à vista no PIX</span>
+        </div>
+
+        <div class="benefits-list">
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Modelos em Word e Google Docs 100% blindados para ATS</span>
+          </div>
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Guia Definitivo Anti-Gupy (como pontuar 90%+)</span>
+          </div>
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Pack de Prompts do ChatGPT para personalizar seu CV</span>
+          </div>
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Download imediato no seu e-mail e WhatsApp</span>
+          </div>
+        </div>
+
+        <a href="https://pay.kiwify.com.br/QTjoY40" class="cta-btn" id="kiwify-checkout-btn">
+          GARANTIR MODELO APROVADO POR R$ 27
+        </a>
+
+        <div class="guarantee-text">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Compra segura via Kiwify • Garantia incondicional de 7 dias
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        title: "1. Como é a diagramação visual do seu currículo?",
+        options: [
+          { icon: "🎨", text: "Feito no Canva com cores, ícones e 2 colunas", sub: "Design criativo com gráficos ou barras de nível", risk: 25 },
+          { icon: "📄", text: "Formato simples em 1 coluna só texto no Word", sub: "Estrutura direta sem caixas de texto", risk: 5 },
+          { icon: "📊", text: "Modelo com foto, tabela de habilidades e ícones", sub: "Telefone e e-mail representados por desenhos", risk: 25 },
+          { icon: "❓", text: "Não sei exatamente, peguei um modelo na internet", sub: "Nunca conferi a leitura em ATS", risk: 20 }
+        ]
+      },
+      {
+        id: 2,
+        title: "2. Em quanto tempo você costuma receber 'Seu perfil não foi selecionado'?",
+        options: [
+          { icon: "⚡", text: "Em menos de 24 a 48 horas após a inscrição", sub: "Sinal clássico de corte 100% algorítmico", risk: 25 },
+          { icon: "⏳", text: "Demora semanas ou nunca recebo resposta", sub: "Fica esquecido no banco de talentos sem pontuação", risk: 20 },
+          { icon: "✉️", text: "Já recebi recusa no final de semana ou de madrugada", sub: "Robô processou o descarte em lote", risk: 25 },
+          { icon: "🎯", text: "Raramente recebo chamadas para primeira entrevista", sub: "Conversão de currículo abaixo de 2%", risk: 20 }
+        ]
+      },
+      {
+        id: 3,
+        title: "3. Você costuma adaptar palavras-chave para cada anúncio de vaga?",
+        options: [
+          { icon: "📁", text: "Não, envio exatamente o mesmo PDF para todas", sub: "Zero personalização para o filtro semântico da vaga", risk: 25 },
+          { icon: "✏️", text: "Tento mudar um pouco, mas dá muito trabalho", sub: "Adaptação parcial e inconsistente", risk: 15 },
+          { icon: "🤖", text: "Não sei como achar as palavras-chave certas da vaga", sub: "Dificuldade em identificar o que a IA busca", risk: 20 },
+          { icon: "✅", text: "Sim, adapto manualmente cada um", sub: "Boa prática, mas consome horas", risk: 5 }
+        ]
+      },
+      {
+        id: 4,
+        title: "4. Qual formato de arquivo você envia na candidatura?",
+        options: [
+          { icon: "🖼️", text: "PDF exportado direto do Canva", sub: "Muitas vezes texto é achatado como imagem e fica ilegível", risk: 25 },
+          { icon: "📝", text: "Arquivo .DOCX (Word)", sub: "Alta legibilidade pelo leitor ATS", risk: 5 },
+          { icon: "📄", text: "PDF limpo gerado pelo Word ou Google Docs", sub: "Texto selecionável e rastreável", risk: 5 },
+          { icon: "📷", text: "Imagem (PNG/JPEG) ou print", sub: "Descarte imediato em 100% dos sistemas ATS", risk: 25 }
+        ]
+      }
+    ];
+
+    let currentStep = 0;
+    let accumulatedRisk = 0;
+
+    const quizCard = document.getElementById('quiz-card');
+    const loadingCard = document.getElementById('loading-card');
+    const resultCard = document.getElementById('result-card');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const progressBar = document.getElementById('progress-bar');
+    const stepLabel = document.getElementById('step-label');
+    const stepPercent = document.getElementById('step-percent');
+    const riskScore = document.getElementById('risk-score');
+
+    function renderQuestion() {
+      const q = questions[currentStep];
+      stepLabel.textContent = `Etapa ${currentStep + 1} de ${questions.length}`;
+      const pct = Math.round(((currentStep + 1) / questions.length) * 100);
+      stepPercent.textContent = `${pct}%`;
+      progressBar.style.width = `${pct}%`;
+
+      questionText.textContent = q.title;
+      optionsContainer.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+          <span class="opt-icon">${opt.icon}</span>
+          <div class="opt-text">
+            ${opt.text}
+            <span class="opt-sub">${opt.sub}</span>
+          </div>
+        `;
+        btn.onclick = () => handleChoice(opt.risk);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleChoice(risk) {
+      accumulatedRisk += risk;
+      currentStep++;
+
+      if (currentStep < questions.length) {
+        renderQuestion();
+      } else {
+        showLoading();
+      }
+    }
+
+    function showLoading() {
+      quizCard.style.display = 'none';
+      loadingCard.style.display = 'block';
+
+      const steps = [
+        "Simulando leitura de OCR da Gupy...",
+        "Calculando densidade de palavras-chave...",
+        "Verificando separação de colunas e tabelas...",
+        "Calculando probabilidade de descarte automático..."
+      ];
+
+      let idx = 0;
+      const interval = setInterval(() => {
+        idx++;
+        if (idx < steps.length) {
+          document.getElementById('loading-detail').textContent = steps[idx];
+        } else {
+          clearInterval(interval);
+          showResult();
+        }
+      }, 500);
+    }
+
+    function showResult() {
+      loadingCard.style.display = 'none';
+      resultCard.style.display = 'block';
+
+      // Minimum calculated risk is bounded between 68% and 94% for high realism
+      let finalRisk = Math.min(94, Math.max(68, accumulatedRisk));
+      riskScore.textContent = `${finalRisk}%`;
+    }
+
+    // Initialize
+    renderQuestion();
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a457a16b8d165035',t:'MTc5MTE1MzAyMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
