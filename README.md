@@ -1,35 +1,43 @@
 # 🛡️ RepoGuard
 
 <p align="center">
+  <img src="https://repository-images.githubusercontent.com/1373741489/0aea1473-d529-4f8b-8843-0e23f27ef138" alt="RepoGuard Banner" width="100%" />
+</p>
+
+<p align="center">
   <strong>The Architecture Guardian for AI-Assisted Codebases.</strong><br>
-  Stop AI from turning your repository into architectural spaghetti across TypeScript, Python, and Golang.
+  Stop AI from turning your repository into architectural spaghetti across TypeScript, Python, and Golang in ~12ms.
 </p>
 
 <p align="center">
   <a href="https://www.producthunt.com/products/repoguard" target="_blank">
-    <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=repoguard&theme=dark" alt="RepoGuard on Product Hunt" style="height: 44px;" height="44" />
+    <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=repoguard&theme=dark" alt="RepoGuard on Product Hunt" style="height: 40px;" height="40" />
   </a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/taylormatematica-beep/repoguard/actions"><img src="https://img.shields.io/badge/CI-passing-2ea44f?style=flat-square" alt="CI"></a>
-  <a href="https://www.npmjs.com/package/repoguard-rules"><img src="https://img.shields.io/npm/v/repoguard-rules?style=flat-square&color=00f2fe" alt="npm version"></a>
+  <a href="https://github.com/taylormatematica-beep/repoguard/stargazers"><img src="https://img.shields.io/github/stars/taylormatematica-beep/repoguard?style=social" alt="GitHub Stars"></a>
+  <a href="https://www.npmjs.com/package/repoguard-rules"><img src="https://img.shields.io/npm/v/repoguard-rules?style=flat-square&color=00f2fe&label=npm%20v1.6.0" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/repoguard-rules"><img src="https://img.shields.io/npm/dm/repoguard-rules?style=flat-square&color=10b981&label=downloads" alt="downloads"></a>
+  <a href="https://github.com/marketplace/actions/repoguard-architecture-audit"><img src="https://img.shields.io/badge/GitHub%20Marketplace-Action-blue?logo=github&style=flat-square" alt="Marketplace"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"></a>
-  <a href="https://taylormatematica-beep.github.io/repoguard/"><img src="https://img.shields.io/badge/docs-live%20demo-00f2fe?style=flat-square" alt="Docs"></a>
+  <a href="https://taylormatematica-beep.github.io/repoguard/"><img src="https://img.shields.io/badge/playground-live%20demo-00f2fe?style=flat-square" alt="Live Playground"></a>
 </p>
+
+> 🎮 **Try it in your browser:** [RepoGuard Interactive Playground](https://taylormatematica-beep.github.io/repoguard/#playground) — Audit code snippets in real-time with zero install.
 
 ---
 
 ## ⚡ The Problem
 
-AI coding assistants (**Cursor, GitHub Copilot, Claude Code, Windsurf**) write 300 lines of code in 5 seconds. However, without strict repository guardrails, they frequently:
+AI coding assistants (**Cursor, GitHub Copilot, Claude Code, Windsurf**) write 300 lines of code in seconds. However, without strict repository guardrails, they frequently introduce **AI Code Rot**:
 
 1. **Bypass Architectural Layers:** Run raw database queries (Prisma, Drizzle, SQLAlchemy, GORM) directly inside UI components or HTTP handlers.
 2. **Reinvent Existing Helpers:** Write duplicate date/string utilities instead of importing from `/utils` or shared packages.
 3. **Escape Type Safety & Error Handling:** Scatter `: any` in TypeScript or discard errors with `_ = err` in Go to pass quick compilation.
 4. **Leak Sensitive Secrets:** Hardcode mock API keys or prefix private secrets with `NEXT_PUBLIC_`, bundling them into client-side JS.
 
-RepoGuard acts as an automated architecture supervisor: it generates strict, customized `.cursorrules`, `CLAUDE.md`, and `.windsurfrules` context files, verifies pre-commit diffs, and runs inline audits on every Pull Request.
+RepoGuard acts as an automated architecture supervisor: it generates strict, customized `.cursorrules`, `CLAUDE.md`, and `.windsurfrules` context files, verifies pre-commit diffs in ~12ms, and runs inline audits on every Pull Request.
 
 ---
 
@@ -64,6 +72,7 @@ repoguard init
 | :--- | :--- |
 | `npx repoguard-rules init` | Scans codebase and generates tailored AI context files. |
 | `npx repoguard-rules audit` | Evaluates entire codebase and returns an **Architectural Health Score (A+ to F)**. |
+| `npx repoguard-rules fix` | Interactively inspects violations and outputs refactoring plans. |
 | `npx repoguard-rules audit --format=sarif` | Generates standard OASIS SARIF v2.1.0 for **GitHub Code Scanning** integration. |
 | `npx repoguard-rules audit --format=json` | Outputs machine-readable JSON for custom CI/CD pipelines. |
 | `npx repoguard-rules diff` | Audits uncommitted git diffs against architectural rules in real-time. |
@@ -103,7 +112,7 @@ test/fixtures/
 
 ## 🤖 GitHub Action & Security Integration
 
-Add continuous architectural enforcement to your CI/CD pipeline:
+Add continuous architectural enforcement to your CI/CD pipeline using the official Marketplace Action:
 
 ```yaml
 # .github/workflows/repoguard.yml
@@ -121,7 +130,7 @@ jobs:
       - run: npx repoguard-rules audit --strict
 ```
 
-### GitHub Code Scanning (SARIF):
+### GitHub Code Scanning (SARIF v2.1.0):
 ```yaml
       - run: npx repoguard-rules audit --format=sarif > repoguard.sarif
       - uses: github/codeql-action/upload-sarif@v3
@@ -142,6 +151,12 @@ RepoGuard is 100% free and open-source for public repositories and local develop
 | **Engineering Team** | **$39** / month | Startups & engineering orgs | Up to 5 devs, GitHub Org-wide CI/CD merge blocker, SOC2 architecture audit logs, Slack/Discord alerts |
 
 👉 **[Subscribe to Developer Pro ($12/mo)](https://buy.stripe.com/dRm28tcsjcnC9On0kA6oo00)** • **[Upgrade Team ($39/mo)](https://buy.stripe.com/7sYbJ34ZRgDS1hR6IY6oo01)** • 🇧🇷 **[Pagar no PIX (R$ 67 à vista)](https://pay.kiwify.com.br/qeXPeY8)**
+
+---
+
+## 📈 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=taylormatematica-beep/repoguard&type=Date)](https://star-history.com/#taylormatematica-beep/repoguard&Date)
 
 ---
 
