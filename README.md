@@ -20,6 +20,8 @@
   <a href="https://github.com/taylormatematica-beep/repoguard/actions/workflows/ci.yml"><img src="https://github.com/taylormatematica-beep/repoguard/actions/workflows/ci.yml/badge.svg" alt="CI & Architecture Guard"></a>
   <a href="https://www.npmjs.com/package/repoguard-rules"><img src="https://img.shields.io/npm/v/repoguard-rules?style=flat-square&color=00f2fe&label=npm%20v1.6.1" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/repoguard-rules"><img src="https://img.shields.io/npm/dm/repoguard-rules?style=flat-square&color=10b981&label=downloads" alt="downloads"></a>
+  <a href="https://glama.ai/mcp/servers/64btyug8f1"><img src="https://glama.ai/mcp/servers/64btyug8f1/badge" alt="RepoGuard MCP server"></a>
+  <a href="https://mcpservers.org/servers/taylormatematica-beep/repoguard"><img src="https://mcpservers.org/badge.svg" alt="Listed on mcpservers.org"></a>
   <a href="https://github.com/marketplace/actions/repoguard-architecture-audit"><img src="https://img.shields.io/badge/GitHub%20Marketplace-Action-blue?logo=github&style=flat-square" alt="Marketplace"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"></a>
   <a href="https://taylormatematica-beep.github.io/repoguard/"><img src="https://img.shields.io/badge/playground-live%20demo-00f2fe?style=flat-square" alt="Live Playground"></a>
