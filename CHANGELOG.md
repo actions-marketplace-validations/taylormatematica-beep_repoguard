@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.1] - 2026-10-04
+### 🤖 Added
+- **Native Model Context Protocol (MCP) Server:**
+  - Integrated zero-dependency stdio JSON-RPC 2.0 transport via `bin/mcp.js`.
+  - Added `npx repoguard mcp` CLI command.
+  - Exposes 3 native tools for Claude Desktop, Claude Code, Cursor, and Windsurf:
+    - `repoguard_audit`: Audits repositories for Clean Architecture breaches in ~12ms.
+    - `repoguard_get_rules`: Returns all 12 architectural guardrails to prevent AI hallucination.
+    - `repoguard_fix`: Analyzes violating code snippets and returns actionable refactoring plans.
+
+---
+
 ## [1.6.0] - 2026-10-03
 ### 🚀 Added
 - **Golang Clean Architecture Engine:**
