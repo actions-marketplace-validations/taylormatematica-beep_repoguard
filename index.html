@@ -7,6 +7,15 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>RepoGuard v1.6.0 — Multi-Language Architecture Guardian (TypeScript, Python, Go)</title>
+  <meta property="og:title" content="RepoGuard v1.6.0 — Architecture Guardian for AI-Assisted Code">
+  <meta property="og:description" content="Stop AI from turning your repository into architectural spaghetti. 12 strict rules for TypeScript, Python, and Golang in ~12ms.">
+  <meta property="og:image" content="https://repository-images.githubusercontent.com/1373741489/0aea1473-d529-4f8b-8843-0e23f27ef138">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://taylormatematica-beep.github.io/repoguard/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RepoGuard v1.6.0 — Architecture Guardian for AI-Assisted Code">
+  <meta name="twitter:description" content="Stop AI from turning your repository into architectural spaghetti. 12 strict rules for TypeScript, Python, and Golang in ~12ms.">
+  <meta name="twitter:image" content="https://repository-images.githubusercontent.com/1373741489/0aea1473-d529-4f8b-8843-0e23f27ef138">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f2fe'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/></svg>">
   <style>
     :root {
@@ -678,7 +687,7 @@
         <a href="#pricing">Pricing</a>
         <a href="https://github.com/taylormatematica-beep/repoguard" class="btn-github" target="_blank" rel="noopener noreferrer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          Star on GitHub
+          ⭐ Star on GitHub (3)
         </a>
       </div>
     </div>
@@ -1273,6 +1282,226 @@ export default async function UserProfile({ id }: <span class="code-fix">UserPro
       });
     }
 
+    
+    // --- Playground Client Engine ---
+    const playgroundPresets = {
+      nextjs: {
+        filename: "src/components/UserProfile.tsx",
+        code: "// components/UserProfile.tsx\\nexport default async function UserProfile({ id }: any) {\\n  // 🚨 Direct Prisma database query inside UI component!\\n  const user = await prisma.user.findUnique({\\n    where: { id },\\n    include: { billing: true }\\n  });\\n  console.log(\\"Loaded user:\\", user);\\n  return <div>{user.name}</div>;\\n}"
+      },
+      golang: {
+        filename: "handlers/user_handler.go",
+        code: "package handlers\\n\\nimport (\\n\\t\\"net/http\\"\\n\\t\\"github.com/gin-gonic/gin\\"\\n)\\n\\nfunc DeleteUser(c *gin.Context) {\\n\\tid := c.Param(\\"id\\")\\n\\t// 🚨 Direct GORM DB mutation inside HTTP handler!\\n\\tdb.Exec(\\"DELETE FROM users WHERE id = ?\\", id)\\n\\tc.Status(http.StatusNoContent)\\n}"
+      },
+      python: {
+        filename: "routers/order_router.py",
+        code: "@router.post(\\"/orders\\")\\ndef create_order(payload: dict):\\n    order = Order(**payload)\\n    # 🚨 Direct database session commit in route handler!\\n    db.add(order)\\n    db.commit()\\n    return {\\"status\\": \\"created\\"}"
+      },
+      secret: {
+        filename: "src/lib/stripe.ts",
+        code: "// Client bundle environment exposure\\nexport const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY;\\nexport const API_TOKEN = \\"sk_live_98127391827391823\\";"
+      },
+      clean: {
+        filename: "src/components/UserProfile.tsx",
+        code: "import { getUserProfile } from \x27@/services/user.service\x27;\\n\\ninterface Props {\\n  id: string;\\n}\\n\\nexport default async function UserProfile({ id }: Props) {\\n  // Clean architecture: Delegated to domain service layer\\n  const user = await getUserProfile(id);\\n  return <div>{user.name}</div>;\\n}"
+      }
+    };
+
+    function loadPlaygroundPreset(key) {
+      document.querySelectorAll('.playground-preset-btn').forEach(btn => btn.classList.remove('active'));
+      const btn = document.getElementById('p-btn-' + key);
+      if (btn) btn.classList.add('active');
+
+      const preset = playgroundPresets[key];
+      if (preset) {
+        document.getElementById('playground-filename').value = preset.filename;
+        document.getElementById('playground-code').value = preset.code;
+        runPlaygroundAudit();
+      }
+    }
+
+    function runPlaygroundAudit() {
+      const filename = document.getElementById('playground-filename').value;
+      const code = document.getElementById('playground-code').value;
+      const resultsContainer = document.getElementById('playground-results');
+
+      const violations = [];
+      const lines = code.split('\\n');
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const lineNum = i + 1;
+
+        if (/(components|pages|app\\/.*\\/page|UserProfile)\\.(tsx|ts|jsx|js)$/i.test(filename)) {
+          if (/(prisma\\.|db\\.|sequelize\\.|mongoose\\.|drizzle\\.)(find|insert|update|delete|query|select|execute)/i.test(line)) {
+            violations.push({
+              id: "RULE-01",
+              name: "Layering Violation (Direct DB in UI)",
+              severity: "error",
+              line: lineNum,
+              snippet: line.trim(),
+              message: "Direct database/ORM access is strictly prohibited in UI components. Encapsulate queries inside a dedicated service layer (/services/).",
+              suggestion: "const user = await userService.getUserProfile(id);"
+            });
+          }
+        }
+
+        if (/\\.go$/i.test(filename)) {
+          if (/\\b(db|session|gormDB)\\.(Where|Find|First|Take|Last|Save|Create|Delete|Exec|Raw|Query)\\b/i.test(line)) {
+            const isMutation = /\\.(Exec|Commit|Delete|Save|Create)\\b/i.test(line);
+            violations.push({
+              id: "RULE-GO-01",
+              name: "Go Clean Architecture Breach",
+              severity: isMutation ? "critical" : "warning",
+              line: lineNum,
+              snippet: line.trim(),
+              message: "Direct database mutation/query executed inside HTTP handler. Decouple database operations into a repository layer.",
+              suggestion: "err := userRepository.DeleteByID(ctx, id)"
+            });
+          }
+        }
+
+        if (/\\.py$/i.test(filename)) {
+          if (/\\b(db|session)\\.(query|execute|exec|scalars|add|delete|commit)\\b/i.test(line)) {
+            const isCommit = /\\.commit\\b/i.test(line);
+            violations.push({
+              id: "RULE-PY-01",
+              name: "FastAPI Layer Separation Breach",
+              severity: isCommit ? "critical" : "warning",
+              line: lineNum,
+              snippet: line.trim(),
+              message: isCommit ? "Direct database transaction commit in route handler. Encapsulate mutations inside a service layer." : "Direct DB query in route handler.",
+              suggestion: "return orderService.create_order(payload)"
+            });
+          }
+        }
+
+        if (/(NEXT_PUBLIC|VITE)_[A-Z0-9_]*(SECRET|KEY|PASSWORD|TOKEN)/i.test(line) && /process\\.env/i.test(line)) {
+          violations.push({
+            id: "RULE-09",
+            name: "Client-Side Secret Exposure",
+            severity: "critical",
+            line: lineNum,
+            snippet: line.trim(),
+            message: "Private secret prefixed with NEXT_PUBLIC_ or VITE_ is bundled directly into browser JavaScript.",
+            suggestion: "Remove public prefix and access server-side: process.env.STRIPE_SECRET_KEY"
+          });
+        }
+
+        if (/(api_key|secret|password|bearer|auth_token|token)\\s*[:=]\\s*["\x27][A-Za-z0-9_\\-\\.]{16,}["\x27]/i.test(line)) {
+          violations.push({
+            id: "RULE-02",
+            name: "Hardcoded Credential Leak",
+            severity: "critical",
+            line: lineNum,
+            snippet: line.trim(),
+            message: "Potential hardcoded secret or API credential detected.",
+            suggestion: "const secret = process.env.API_SECRET_KEY;"
+          });
+        }
+
+        if (/:\\s*any\\b|\\bas\\s+any\\b/i.test(line)) {
+          violations.push({
+            id: "RULE-03",
+            name: "Forbidden 'any' Type Escape Hatch",
+            severity: "warning",
+            line: lineNum,
+            snippet: line.trim(),
+            message: "AI assistants use 'any' to bypass compilation errors, destroying type safety.",
+            suggestion: "interface Props { id: string; }"
+          });
+        }
+
+        if (/console\\.(log|debug|info)\\(/i.test(line) && !/\\/\\//.test(line)) {
+          violations.push({
+            id: "RULE-04",
+            name: "Production Logger Hygiene",
+            severity: "info",
+            line: lineNum,
+            snippet: line.trim(),
+            message: "Raw console statement in application flow. Use centralized structured logger.",
+            suggestion: "logger.info('Loaded user', { userId });"
+          });
+        }
+      }
+
+      let penalty = 0;
+      for (const v of violations) {
+        if (v.severity === 'critical') penalty += 25;
+        else if (v.severity === 'error') penalty += 15;
+        else if (v.severity === 'warning') penalty += 5;
+        else if (v.severity === 'info') penalty += 2;
+      }
+      const score = Math.max(0, 100 - penalty);
+      let grade = 'A+ (Clean)';
+      let badgeColor = '#10b981';
+      if (score < 60) { grade = 'D (High Debt)'; badgeColor = '#ef4444'; }
+      else if (score < 80) { grade = 'C (Drifted)'; badgeColor = '#f59e0b'; }
+      else if (score < 90) { grade = 'B (Good)'; badgeColor = '#3b82f6'; }
+
+      let htmlOut = `
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div>
+              <div style="font-size:0.8rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Health Scorecard</div>
+              <div style="font-size:1.3rem; font-weight:800; color:#fff; margin-top:2px;">Grade: <span style="color:${badgeColor};">${grade}</span></div>
+            </div>
+            <div class="score-circle" style="border-color:${badgeColor}; color:${badgeColor};">
+              ${score}
+            </div>
+          </div>
+          <div style="border-top:1px solid var(--border); padding-top:14px; max-height:260px; overflow-y:auto;">
+      `;
+
+      if (violations.length === 0) {
+        htmlOut += `
+          <div style="padding:20px; text-align:center; color:#10b981;">
+            <div style="font-size:2rem; margin-bottom:8px;">✨</div>
+            <strong style="color:#fff; font-size:1.05rem;">Flawless Architecture!</strong>
+            <p style="color:#94a3b8; font-size:0.85rem; margin-top:4px;">Zero layer breaches, zero secret leaks, and full compliance with RepoGuard v1.6.0 standards.</p>
+            <div style="margin-top:12px;">
+              <a href="https://github.com/taylormatematica-beep/repoguard" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:rgba(234,179,8,0.15); border:1px solid rgba(234,179,8,0.5); color:#facc15; padding:6px 14px; border-radius:8px; font-weight:700; text-decoration:none; font-size:0.85rem;">⭐ Star RepoGuard on GitHub (3)</a>
+            </div>
+          </div>
+        `;
+      } else {
+        for (const v of violations) {
+          const icon = v.severity === 'critical' ? '🚨' : v.severity === 'error' ? '❌' : v.severity === 'warning' ? '⚠️' : 'ℹ️';
+          const sevColor = v.severity === 'critical' || v.severity === 'error' ? '#ef4444' : '#f59e0b';
+          htmlOut += `
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-left:3px solid ${sevColor}; border-radius:6px; padding:10px 12px; margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700; margin-bottom:4px;">
+                <span style="color:${sevColor};">${icon} [${v.id}] ${v.name}</span>
+                <span style="color:#64748b; font-family:var(--font-mono);">Line ${v.line}</span>
+              </div>
+              <p style="font-size:0.8rem; color:#cbd5e1; line-height:1.4;">${v.message}</p>
+              ${v.suggestion ? `<div style="margin-top:6px; font-family:var(--font-mono); font-size:0.75rem; background:rgba(16,185,129,0.1); color:#34d399; padding:4px 8px; border-radius:4px;">💡 Fix: ${v.suggestion}</div>` : ''}
+            </div>
+          `;
+        }
+      }
+
+      htmlOut += `
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border); padding-top:14px; margin-top:14px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.82rem; color:#94a3b8;">Want this in git pre-commit & PRs?</span>
+          <a href="#demo" style="color:var(--accent-cyan); font-size:0.85rem; font-weight:600; text-decoration:none;">
+            npx repoguard audit →
+          </a>
+        </div>
+      `;
+
+      resultsContainer.innerHTML = htmlOut;
+    }
+
+    // Auto-load preset on DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('playground-code')) {
+        loadPlaygroundPreset('nextjs');
+      }
+    });
+
     // Initialize with audit scenario immediately
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => runTerminalCommand('audit'));
@@ -1280,5 +1509,5 @@ export default async function UserProfile({ id }: <span class="code-fix">UserPro
       runTerminalCommand('audit');
     }
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44e7d4e39a399ea',t:'MTc5MTA1NzE2OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a454cc8d48bce2ad',t:'MTc5MTEyMzMzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
