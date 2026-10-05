@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Diagnóstico de Vulnerabilidade a Golpes — GolpeHero 2026</title>
-  <meta name="description" content="Descubra em 90 segundos o nível de vulnerabilidade da sua família contra golpes de WhatsApp, falso 0800 e fraudes no PIX.">
+  <title>Diagnóstico Oficial de Vulnerabilidade a Golpes — GolpeHero 2026</title>
+  <meta name="description" content="Descubra em 90 segundos o nível de vulnerabilidade da sua família contra golpes de WhatsApp, falso 0800, maquininha e fraudes no PIX.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,7 +101,7 @@
     }
     .progress-fill {
       height: 100%;
-      width: 14%;
+      width: 10%;
       background: linear-gradient(90deg, #f59e0b, #ef4444);
       border-radius: 999px;
       transition: width 0.35s ease;
@@ -609,13 +609,13 @@
         Alerta de Fraude • Diagnóstico Familiar 2026
       </div>
       <h1 class="main-title">Sua família cairia em um <span>Golpe do PIX</span>?</h1>
-      <p class="subtitle">Responda 7 perguntas rápidas para mapear o nível de risco e blindar seus pais, filhos e contas bancárias.</p>
+      <p class="subtitle">Responda 10 perguntas com cenários reais para mapear as brechas e blindar seus pais, filhos e contas bancárias.</p>
     </div>
 
     <!-- Progress -->
     <div class="step-counter" id="step-counter-box">
-      <span id="step-label">Etapa 1 de 7</span>
-      <span id="step-percent">14%</span>
+      <span id="step-label">Etapa 1 de 10</span>
+      <span id="step-percent">10%</span>
     </div>
     <div class="progress-wrap" id="progress-wrap-box">
       <div class="progress-fill" id="progress-bar"></div>
@@ -623,7 +623,7 @@
 
     <!-- Question Cards -->
     <div class="card" id="quiz-card">
-      <h2 class="question-title" id="question-text">1. Se alguém mandar mensagem no WhatsApp dizendo "Mãe, troquei de número, me ajuda com um PIX", o que acontece?</h2>
+      <h2 class="question-title" id="question-text">1. Se tocar o seu celular e no identificador aparecer o nome exato do seu banco e o número 0800 do cartão, o que você faz?</h2>
       <div class="options-list" id="options-container">
         <!-- Rendered dynamically -->
       </div>
@@ -669,7 +669,7 @@
       <div class="score-alert">
         <span class="alert-tag">⚠️ Risco Crítico de Fraude</span>
         <div class="lead-greeting" id="result-greeting">Rodrigo, laudo da sua família:</div>
-        <div class="score-number" id="risk-score">89%</div>
+        <div class="score-number" id="risk-score">92%</div>
         <div class="score-desc">Probabilidade de alguém da sua família cair em golpes bancários ativos</div>
       </div>
 
@@ -691,11 +691,11 @@
         </div>
         <div class="finding-item">
           <span class="item-icon">✕</span>
-          <div><strong>Vulnerabilidade ao Falso Parente:</strong> Golpistas usam foto do perfil clonada para extrair PIX com urgência emocional.</div>
+          <div><strong>Falsa Central e Spoofing Telefônico:</strong> Quadrilhas simulam o número do banco na tela e induzem ligações de pânico.</div>
         </div>
         <div class="finding-item">
           <span class="item-icon">✕</span>
-          <div><strong>Falso 0800 Bancário:</strong> Mensagens de SMS com compras falsas induzem a ligar para centrais forjadas.</div>
+          <div><strong>Golpe da Maquininha e Frete:</strong> Cobranças de falsas taxas com visores adulterados de maquininha de cartão.</div>
         </div>
         <div class="finding-item">
           <span class="item-icon">✕</span>
@@ -703,7 +703,7 @@
         </div>
         <div class="finding-item">
           <span class="item-icon">✕</span>
-          <div><strong>Limites de Transferência Abertos:</strong> Falta de trava de segurança noturna e limite diário em celulares de parentes.</div>
+          <div><strong>Apps de Banco na Rua sem Limite:</strong> Aparelhos sem trava de limite noturno e sem proteção em duas etapas.</div>
         </div>
       </div>
 
@@ -754,7 +754,7 @@
   <div class="admin-modal" id="admin-modal">
     <div class="admin-content">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-        <h3 style="color:#ef4444; font-size:1.15rem;">📋 Painel GolpeHero — Leads & Respostas</h3>
+        <h3 style="color:#ef4444; font-size:1.15rem;">📋 Painel GolpeHero — Leads & 10 Respostas</h3>
         <button onclick="closeAdmin()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:700;">Fechar</button>
       </div>
       <div id="leads-container">Carregando leads...</div>
@@ -765,72 +765,102 @@
     const questions = [
       {
         id: 1,
-        title: "1. Se alguém mandar mensagem no WhatsApp dizendo 'Troquei de número, me ajuda com um PIX', o que seus parentes fazem?",
+        title: "1. Se tocar o seu celular e no identificador aparecer o nome exato do seu banco e o número 0800 do cartão, o que você faz?",
         options: [
-          { icon: "💸", text: "Minha mãe ou pai provavelmente transfeririam por desespero", sub: "Golpe clássico do perfil clonado que lucra milhões", risk: 22 },
-          { icon: "📞", text: "Ligariam para o número antigo para confirmar a voz", sub: "Atitude correta de contra-prova", risk: 3 },
-          { icon: "❓", text: "Ficariam na dúvida e poderiam acabar mandando", sub: "Vulnerabilidade crítica à pressão emocional", risk: 18 },
-          { icon: "🛑", text: "Nunca mandariam nada sem confirmação presencial", sub: "Família com orientação prévia", risk: 4 }
+          { icon: "📞", text: "Atendo e confio, afinal é o número oficial do verso do meu cartão", sub: "Quadrilhas usam software de spoofing para falsificar a bina!", risk: 23 },
+          { icon: "🛑", text: "Desligo na hora e ligo eu mesmo no número oficial por outro aparelho", sub: "Regra de ouro da contra-ligação segura", risk: 2 },
+          { icon: "❓", text: "Fico na dúvida e passo apenas dados básicos se a pessoa pedir", sub: "Brecha perigosa explorada por engenharia social", risk: 19 },
+          { icon: "😰", text: "Atendo desesperado achando que invadiram minha conta bancária", sub: "Gatilho emocional de urgência que faz vítimas caírem", risk: 18 }
         ]
       },
       {
         id: 2,
-        title: "2. Quando chega um SMS de banco dizendo 'Compra de R$ 3.850 aprovada. Se desconhece, ligue no 0800':",
+        title: "2. Chega um SMS: 'Compra de R$ 3.850 aprovada nas Casas Bahia. Se desconhece ligue 0800...'. O que seus parentes fazem?",
         options: [
-          { icon: "📲", text: "Alguém da família ligaria no número do SMS para cancelar", sub: "Cilada do falso 0800 operado por quadrilhas", risk: 22 },
-          { icon: "🏦", text: "Abririam o aplicativo oficial do banco para checar o extrato", sub: "Regra de ouro de segurança bancária", risk: 3 },
-          { icon: "😰", text: "Ficariam desesperados achando que o cartão foi clonado", sub: "Gatilho de urgência que faz a vítima cair", risk: 18 },
-          { icon: "🗑️", text: "Apagam o SMS na hora porque sabem que banco não manda 0800", sub: "Excelente discernimento", risk: 4 }
+          { icon: "📲", text: "Alguém da família ligaria no 0800 do SMS para cancelar a compra", sub: "Cilada clássica da falsa central telefônica armada", risk: 23 },
+          { icon: "🏦", text: "Abrem o app oficial do banco para checar o extrato da conta", sub: "Se não está no extrato, é golpe garantido!", risk: 2 },
+          { icon: "😰", text: "Entram em pânico achando que o cartão foi clonado", sub: "O pânico faz a vítima ligar no falso número", risk: 18 },
+          { icon: "🗑️", text: "Apagam na hora porque sabem que banco não manda 0800 por SMS", sub: "Discernimento correto", risk: 3 }
         ]
       },
       {
         id: 3,
-        title: "3. Se uma suposta 'Central do Banco' ligar pedindo para 'fazer um PIX de teste para estornar uma fraude':",
+        title: "3. Chega um entregador dizendo ter um presente surpresa, mas você precisa pagar 'apenas R$ 6,90 de taxa de frete' na maquininha dele:",
         options: [
-          { icon: "⚠️", text: "Meus pais poderiam acreditar que é o procedimento do banco", sub: "Nenhum banco pede PIX de devolução ou cancelamento!", risk: 22 },
-          { icon: "🚫", text: "Desligariam na cara imediatamente", sub: "Banco NUNCA pede transferência de segurança", risk: 2 },
-          { icon: "🤔", text: "Tentariam pedir ajuda para mim antes de fazer qualquer coisa", sub: "Dependência de checagem familiar", risk: 12 },
-          { icon: "🚨", text: "Já quase caímos nesse golpe recentemente", sub: "Alvo ativo de quadrilhas financeiras", risk: 20 }
+          { icon: "💳", text: "Passo o cartão para receber o presente, afinal R$ 6,90 é pouco", sub: "Golpe da maquininha com visor quebrado que cobra R$ 6.900!", risk: 24 },
+          { icon: "🚫", text: "Recuso a entrega na hora e não passo cartão de jeito nenhum", sub: "Se você não pediu, jamais pague frete a desconhecido", risk: 2 },
+          { icon: "📱", text: "Tento fazer um PIX para o entregador para não usar cartão", sub: "Ainda assim pode ser armadilha de engenharia social", risk: 16 },
+          { icon: "🤷", text: "Deixo o porteiro ou parente resolver e pagar", sub: "Terceiros caem facilmente no golpe do visor adulterado", risk: 19 }
         ]
       },
       {
         id: 4,
-        title: "4. Vocês costumam receber links de 'Taxa de encomenda presa nos Correios' ou 'Resgate de valores a receber'?",
+        title: "4. Se mandarem mensagem no WhatsApp com a foto do seu parente dizendo 'Mãe, troquei de número, me ajuda a pagar um PIX urgente':",
         options: [
-          { icon: "📦", text: "Sim, e já quase clicamos para ver o que era", sub: "Páginas falsas que clonam dados do cartão e PIX", risk: 18 },
-          { icon: "🛑", text: "Nunca clicamos em links recebidos por SMS ou WhatsApp", sub: "Barreira fundamental contra phishing", risk: 3 },
-          { icon: "🔍", text: "Alguém da família já pagou uma taxa falsa dessas", sub: "Vítima recente de golpe de entrega", risk: 22 },
-          { icon: "📱", text: "Recebo direto, mas sei que é golpe", sub: "Exposição alta a tentativas ativas", risk: 12 }
+          { icon: "💸", text: "Minha mãe ou pai provavelmente transfeririam por desespero", sub: "Golpe de clonagem emocional que lucra milhões todo dia", risk: 23 },
+          { icon: "📞", text: "Ligariam imediatamente no número antigo da pessoa para ouvir a voz", sub: "Contra-prova fatal que desmascara o golpista", risk: 2 },
+          { icon: "❓", text: "Ficariam na dúvida e começariam a conversar para confirmar", sub: "Golpistas são treinados para manipular conversas", risk: 16 },
+          { icon: "🛑", text: "Temos uma palavra-passe secreta na família para emergências", sub: "Blindagem máxima recomendada por peritos", risk: 2 }
         ]
       },
       {
         id: 5,
-        title: "5. Se alguém da sua família sofrer um golpe do PIX agora, vocês sabem acionar o MED do Banco Central em até 72h?",
+        title: "5. Uma 'Central de Segurança' liga dizendo que sua conta foi invadida e pede para você fazer um PIX temporário para estornar a fraude:",
         options: [
-          { icon: "❓", text: "Não faço a menor ideia do que é MED nem como funciona", sub: "91% dos brasileiros perdem o dinheiro por não saber isso", risk: 22 },
-          { icon: "⏳", text: "Apenas faria um Boletim de Ocorrência e esperaria o banco", sub: "BO sozinho NÃO bloqueia o dinheiro na conta do golpista!", risk: 20 },
-          { icon: "✅", text: "Sim, sei exatamente como acionar a devolução emergencial", sub: "Protocolo oficial do Banco Central", risk: 4 },
-          { icon: "🏦", text: "Acho que o banco devolve sozinho automaticamente", sub: "Ilusão: sem notificação formal, o banco recusa", risk: 20 }
+          { icon: "⚠️", text: "Meus parentes poderiam achar que é o procedimento do banco", sub: "Nenhum banco jamais pede PIX de devolução ou teste!", risk: 24 },
+          { icon: "🚫", text: "Desligariam na cara imediatamente", sub: "Banco bloqueia transações sem pedir dinheiro de volta", risk: 2 },
+          { icon: "🤔", text: "Ficariam com medo e pediriam a minha opinião antes", sub: "Pelo menos existe checagem familiar prévia", risk: 12 },
+          { icon: "🚨", text: "Já quase caímos ou conhecemos alguém que caiu exatamente nisso", sub: "Alvo frequente de quadrilhas ativas", risk: 20 }
         ]
       },
       {
         id: 6,
-        title: "6. Os celulares dos seus pais ou parentes idosos têm travas de segurança e limites de PIX configurados?",
+        title: "6. Ao pagar uma conta ou ler um QR Code impresso (em mesa de restaurante, boleto ou anúncio), você confere os dados?",
         options: [
-          { icon: "🔓", text: "Não, os limites estão no padrão alto liberado pelo banco", sub: "Risco de perder todas as economias em minutos", risk: 22 },
-          { icon: "🔒", text: "Sim, limite diário baixo e PIX noturno travado em R$ 100", sub: "Blindagem essencial contra roubo e fraude", risk: 3 },
-          { icon: "📱", text: "Eles têm aplicativos de banco instalados sem senha forte", sub: "Acesso direto para qualquer invasor", risk: 20 },
-          { icon: "🤷", text: "Não sei como estão as configurações deles", sub: "Ponto cego perigoso na segurança da família", risk: 16 }
+          { icon: "⚡", text: "Confirmo rápido sem olhar o nome da empresa recebedora nem o banco", sub: "Quadrilhas colam adesivos com QR Codes próprios sobre os originais!", risk: 21 },
+          { icon: "🔍", text: "Sempre confiro a Razão Social, CNPJ e valor exato antes de por a senha", sub: "Prevenção essencial contra adulteração de boletos", risk: 2 },
+          { icon: "📄", text: "Costumo pagar boletos em PDF recebidos por e-mail sem checar", sub: "Falso boleto com código de barras adulterado", risk: 19 },
+          { icon: "🤷", text: "Nem sabia que QR Code em papel podia ser falsificado", sub: "Brecha comum em pagamentos diários", risk: 18 }
         ]
       },
       {
         id: 7,
-        title: "7. Alguém na sua família repete a mesma senha para e-mail, redes sociais e bancos?",
+        title: "7. Se o celular dos seus pais ficar 'Sem Serviço' ou 'Apenas Emergência' no meio do dia, vocês sabem o que pode ser?",
         options: [
-          { icon: "🔑", text: "Sim, quase todo mundo usa a mesma senha básica", sub: "Vazamento em um site expõe todas as outras contas", risk: 20 },
-          { icon: "🛡️", text: "Não, cada conta tem senha única e autenticação em 2 fatores", sub: "Nível avançado de proteção digital", risk: 3 },
-          { icon: "📝", text: "Anotam senhas em bloquinho ou mensagens no próprio celular", sub: "Se o celular for roubado, tudo é invadido", risk: 18 },
-          { icon: "⚠️", text: "Minha mãe/pai usa data de aniversário como senha", sub: "Facilmente decifrável por engenharia social", risk: 20 }
+          { icon: "📶", text: "Achamos que é só oscilação da operadora e esperamos voltar", sub: "Golpe do SIM Swap: quadrilha ativou outro chip para invadir bancos!", risk: 23 },
+          { icon: "🚨", text: "Ligamos na operadora imediatamente de outro telefone para bloquear a linha", sub: "Reação rápida que impede roubo e invasão de contas", risk: 2 },
+          { icon: "📱", text: "Reiniciamos o aparelho e deixamos para lá até a noite", sub: "Tempo de ouro onde os criminosos limpam as contas", risk: 21 },
+          { icon: "❓", text: "Não faço ideia de como isso funciona", sub: "Despreparo crítico contra clonagem de chip em operadora", risk: 18 }
+        ]
+      },
+      {
+        id: 8,
+        title: "8. Chega um e-mail oficial com o seu nome, CPF e brasão da Polícia Federal dizendo 'Mandado de Notificação Judicial em anexo':",
+        options: [
+          { icon: "📥", text: "Abro o arquivo baixado ou clico no link para ver do que se trata", sub: "Arquivo infectado com Trojan bancário que rouba senhas!", risk: 25 },
+          { icon: "🗑️", text: "Apago na hora pois órgãos policiais não enviam intimação com links executáveis", sub: "Conhecimento fundamental de segurança cibernética", risk: 2 },
+          { icon: "😰", text: "Fico apavorado e tento responder o e-mail", sub: "Confirmação de e-mail ativo para lista de alvos de criminosos", risk: 16 },
+          { icon: "🔍", text: "Encaminho para parentes verem se é verdade", sub: "Risco de infectar aparelhos da família toda", risk: 18 }
+        ]
+      },
+      {
+        id: 9,
+        title: "9. Se alguém da sua família sofrer um golpe do PIX agora, você sabe a diferença entre fazer um BO vs acionar o protocolo MED?",
+        options: [
+          { icon: "❓", text: "Não faço a menor ideia do que é MED nem como funciona", sub: "91% das pessoas perdem o dinheiro para sempre por falta desse conhecimento", risk: 23 },
+          { icon: "⏳", text: "Apenas faria um Boletim de Ocorrência na polícia e aguardaria o banco", sub: "O BO sozinho não bloqueia o saldo na conta de destino!", risk: 20 },
+          { icon: "✅", text: "Sei exatamente como acionar o bloqueio cautelar MED no banco em minutos", sub: "Única chance real de reaver o valor antes do saque", risk: 2 },
+          { icon: "🏦", text: "Acho que o banco tem obrigação de devolver tudo por conta própria", sub: "Sem notificação formal com fundamentação jurídica, bancos recusam", risk: 20 }
+        ]
+      },
+      {
+        id: 10,
+        title: "10. Os celulares que sua família leva para a rua têm aplicativos de banco com investimentos e limites de PIX liberados?",
+        options: [
+          { icon: "🔓", text: "Sim, todos os bancos com limites altos e limite noturno destravado", sub: "Se o aparelho for roubado desbloqueado, o prejuízo é total", risk: 23 },
+          { icon: "🔒", text: "Celular da rua tem apenas conta secundária com limite baixo; principais ficam em casa", sub: "Regra do celular seguro recomendada por peritos", risk: 2 },
+          { icon: "📱", text: "Temos apps de banco mas usamos senha simples de 4 dígitos ou desenho fácil", sub: "Facilmente decifrável por criminosos observando na rua", risk: 19 },
+          { icon: "🤷", text: "Não configuramos limites noturnos nem trava de emergência", sub: "Exposição desnecessária a sequestro-relâmpago ou furto", risk: 17 }
         ]
       }
     ];
@@ -926,9 +956,10 @@
         return;
       }
 
-      const finalRisk = Math.min(94, Math.max(72, Math.round(accumulatedRisk * 0.72)));
+      // 10 questions risk calibration
+      const finalRisk = Math.min(96, Math.max(74, Math.round(accumulatedRisk * 0.45)));
       
-      // Save lead locally WITH full answers
+      // Save lead locally WITH 10 full answers
       saveLeadLocally({
         name: leadName,
         whatsapp: leadWhatsapp,
@@ -937,7 +968,7 @@
         date: new Date().toLocaleString('pt-BR')
       });
 
-      // Dispatch to owner email with detailed question breakdown
+      // Dispatch to owner email with detailed 10 questions breakdown
       try {
         fetch("https://formsubmit.co/ajax/taylor.matematica@gmail.com", {
           method: "POST",
@@ -948,17 +979,20 @@
           body: JSON.stringify({
             "_subject": `🚨 NOVO LEAD GOLPEHERO: ${leadName} - Risco: ${finalRisk}%`,
             "_template": "table",
-            "Produto": "GolpeHero - Proteção Família",
+            "Produto": "GolpeHero - Proteção Família (R$ 19,90)",
             "Nome": leadName,
             "WhatsApp": leadWhatsapp,
             "Risco Fraude": `${finalRisk}%`,
-            "1. Golpe WhatsApp": selectedAnswers[0] || "-",
-            "2. Falso 0800 SMS": selectedAnswers[1] || "-",
-            "3. PIX de Teste": selectedAnswers[2] || "-",
-            "4. Links de Taxa": selectedAnswers[3] || "-",
-            "5. Conhece MED (Banco Central)": selectedAnswers[4] || "-",
-            "6. Travas de PIX": selectedAnswers[5] || "-",
-            "7. Senhas": selectedAnswers[6] || "-",
+            "1. Bina Spoofing 0800": selectedAnswers[0] || "-",
+            "2. SMS Compra Aprovada": selectedAnswers[1] || "-",
+            "3. Golpe da Maquininha": selectedAnswers[2] || "-",
+            "4. Falso Parente WhatsApp": selectedAnswers[3] || "-",
+            "5. PIX Teste/Cancelamento": selectedAnswers[4] || "-",
+            "6. QR Code Adulterado": selectedAnswers[5] || "-",
+            "7. SIM Swap (Sinal Sumiu)": selectedAnswers[6] || "-",
+            "8. Intimação Falsa PF": selectedAnswers[7] || "-",
+            "9. Conhece MED (Banco Central)": selectedAnswers[8] || "-",
+            "10. Banco na Rua": selectedAnswers[9] || "-",
             "Data": new Date().toLocaleString('pt-BR')
           })
         }).catch(err => console.log('Envio bg:', err));
@@ -972,10 +1006,10 @@
       loadingCard.style.display = 'block';
 
       const steps = [
-        "Mapeando vulnerabilidade contra falso 0800 e engenharia social...",
-        "Cruzando dados com boletins de fraudes do Banco Central...",
-        "Calculando exposição a transferências indevidas e clonagem...",
-        "Avaliando preparo para acionamento do MED em até 72h...",
+        "Mapeando vulnerabilidade contra falso 0800 e spoofing telefônico...",
+        "Calculando exposição a clonagem de chip (SIM Swap) e maquininhas...",
+        "Avaliando conhecimento do protocolo de devolução MED em até 72h...",
+        "Checando regras de celulares na rua e travas noturnas de PIX...",
         "Consolidando relatório de segurança da sua família..."
       ];
 
@@ -1041,13 +1075,16 @@
           if (l.answers && l.answers.length > 0) {
             answersHtml = `
               <div class="lead-answers-block" id="answers-gh-${index}" style="display:none;">
-                <div><strong>1. Golpe WhatsApp:</strong> ${l.answers[0] || '-'}</div>
-                <div><strong>2. Falso 0800:</strong> ${l.answers[1] || '-'}</div>
-                <div><strong>3. PIX de Teste:</strong> ${l.answers[2] || '-'}</div>
-                <div><strong>4. Links de Taxa:</strong> ${l.answers[3] || '-'}</div>
-                <div><strong>5. Conhece MED:</strong> ${l.answers[4] || '-'}</div>
-                <div><strong>6. Travas de PIX:</strong> ${l.answers[5] || '-'}</div>
-                <div><strong>7. Senhas:</strong> ${l.answers[6] || '-'}</div>
+                <div><strong>1. Bina Spoofing:</strong> ${l.answers[0] || '-'}</div>
+                <div><strong>2. Falso 0800 SMS:</strong> ${l.answers[1] || '-'}</div>
+                <div><strong>3. Maquininha:</strong> ${l.answers[2] || '-'}</div>
+                <div><strong>4. Parente WhatsApp:</strong> ${l.answers[3] || '-'}</div>
+                <div><strong>5. PIX Teste:</strong> ${l.answers[4] || '-'}</div>
+                <div><strong>6. QR Code:</strong> ${l.answers[5] || '-'}</div>
+                <div><strong>7. SIM Swap:</strong> ${l.answers[6] || '-'}</div>
+                <div><strong>8. E-mail PF:</strong> ${l.answers[7] || '-'}</div>
+                <div><strong>9. Conhece MED:</strong> ${l.answers[8] || '-'}</div>
+                <div><strong>10. Banco na Rua:</strong> ${l.answers[9] || '-'}</div>
               </div>
             `;
           }
@@ -1063,7 +1100,7 @@
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span style="color:#64748b; font-size:0.75rem">${l.date}</span>
-                <span class="lead-details-toggle" onclick="toggleAnswersGH(${index})">👁️ Ver 7 Respostas</span>
+                <span class="lead-details-toggle" onclick="toggleAnswersGH(${index})">👁️ Ver 10 Respostas</span>
               </div>
               ${answersHtml}
             </div>
@@ -1088,5 +1125,5 @@
     // Initialize
     renderQuestion();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4584669af89e0ef',t:'MTc5MTE1OTc3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a45873dfcbc323c0',t:'MTc5MTE2MTY0MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
