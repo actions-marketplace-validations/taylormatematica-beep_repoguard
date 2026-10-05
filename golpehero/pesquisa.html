@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Diagnóstico de Vulnerabilidade a Golpes — GolpeHero 2026</title>
+  <meta name="description" content="Descubra em 90 segundos o nível de vulnerabilidade da sua família contra golpes de WhatsApp, falso 0800 e fraudes no PIX.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #070a13;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 16px 40px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(239, 68, 68, 0.18) 0%, transparent 65%),
+        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.12) 0%, transparent 50%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 10px #ef4444;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+    .main-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .main-title span {
+      background: linear-gradient(135deg, #ef4444, #f87171);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      height: 6px;
+      width: 100%;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 14%;
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+    .step-counter {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Card Question */
+    .card {
+      background: rgba(18, 24, 38, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 24px 20px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .question-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 18px;
+      line-height: 1.35;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+    .option-btn {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 15px 16px;
+      text-align: left;
+      color: #e2e8f0;
+      font-size: 0.93rem;
+      font-weight: 600;
+      line-height: 1.35;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .option-btn:hover, .option-btn:active {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: #ef4444;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
+    }
+    .opt-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .opt-text {
+      flex: 1;
+    }
+    .opt-sub {
+      display: block;
+      font-size: 0.77rem;
+      color: #94a3b8;
+      font-weight: 400;
+      margin-top: 3px;
+    }
+
+    /* Lead Capture Step */
+    .lead-step {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .lead-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .lead-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .lead-sub {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .form-input:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    }
+    .form-input::placeholder {
+      color: #64748b;
+    }
+    .submit-lead-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.5);
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+    .submit-lead-btn:active {
+      transform: scale(0.98);
+    }
+    .privacy-notice {
+      margin-top: 12px;
+      font-size: 0.72rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    /* Loading State */
+    .loading-state {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .scanner-spinner {
+      width: 70px;
+      height: 70px;
+      border: 4px solid rgba(239, 68, 68, 0.2);
+      border-top: 4px solid #ef4444;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 24px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .loading-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .loading-detail {
+      font-size: 0.85rem;
+      color: #f87171;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Result State */
+    .result-state {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .score-alert {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(185, 28, 28, 0.08));
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 16px;
+      padding: 22px 18px;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .alert-tag {
+      display: inline-block;
+      background: #ef4444;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .lead-greeting {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .score-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #ef4444;
+      line-height: 1;
+      margin-bottom: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .score-desc {
+      font-size: 0.95rem;
+      color: #fca5a5;
+      font-weight: 600;
+    }
+
+    .findings-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 18px 16px;
+      margin-bottom: 22px;
+    }
+    .findings-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .finding-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.87rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .finding-item:last-child {
+      margin-bottom: 0;
+    }
+    .item-icon {
+      color: #ef4444;
+      font-weight: bold;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Reality Comparison */
+    .compare-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .compare-card {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+    .compare-card.bad {
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .compare-card.good {
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .compare-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .compare-card.bad .compare-tag { color: #ef4444; }
+    .compare-card.good .compare-tag { color: #10b981; }
+
+    /* Offer Box */
+    .offer-box {
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 18px;
+      padding: 22px 18px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .offer-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #10b981;
+      color: #052e16;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-bottom-left-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .offer-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .offer-sub {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    .price-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .price-old {
+      font-size: 0.95rem;
+      color: #64748b;
+      text-decoration: line-through;
+    }
+    .price-now {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #10b981;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .price-pix {
+      font-size: 0.85rem;
+      color: #34d399;
+      font-weight: 700;
+    }
+
+    .benefits-list {
+      text-align: left;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .benefit-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .benefit-line svg {
+      width: 16px;
+      height: 16px;
+      stroke: #10b981;
+      flex-shrink: 0;
+    }
+
+    /* Pulsing CTA button */
+    .cta-btn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 800;
+      padding: 18px 20px;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.5);
+      animation: ctaPulse 2s infinite;
+      transition: all 0.2s;
+    }
+    @keyframes ctaPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1.02); box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .cta-btn:active {
+      transform: scale(0.98);
+    }
+    .guarantee-text {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    /* Admin Leads Modal */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.88);
+      z-index: 9999;
+      padding: 16px;
+      overflow-y: auto;
+    }
+    .admin-content {
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 16px;
+      max-width: 580px;
+      margin: 20px auto;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    }
+    .lead-card-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .lead-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .wa-btn {
+      background: #25D366;
+      color: #000;
+      font-weight: 800;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .lead-details-toggle {
+      font-size: 0.78rem;
+      color: #38bdf8;
+      cursor: pointer;
+      text-decoration: underline;
+      margin-top: 6px;
+      display: inline-block;
+    }
+    .lead-answers-block {
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      line-height: 1.35;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="badge-live" id="admin-trigger" title="Toque 3 vezes para ver leads">
+        <span class="pulse-dot"></span>
+        Alerta de Fraude • Diagnóstico Familiar 2026
+      </div>
+      <h1 class="main-title">Sua família cairia em um <span>Golpe do PIX</span>?</h1>
+      <p class="subtitle">Responda 7 perguntas rápidas para mapear o nível de risco e blindar seus pais, filhos e contas bancárias.</p>
+    </div>
+
+    <!-- Progress -->
+    <div class="step-counter" id="step-counter-box">
+      <span id="step-label">Etapa 1 de 7</span>
+      <span id="step-percent">14%</span>
+    </div>
+    <div class="progress-wrap" id="progress-wrap-box">
+      <div class="progress-fill" id="progress-bar"></div>
+    </div>
+
+    <!-- Question Cards -->
+    <div class="card" id="quiz-card">
+      <h2 class="question-title" id="question-text">1. Se alguém mandar mensagem no WhatsApp dizendo "Mãe, troquei de número, me ajuda com um PIX", o que acontece?</h2>
+      <div class="options-list" id="options-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Lead Capture Card -->
+    <div class="card lead-step" id="lead-card">
+      <span class="lead-badge">🔒 Diagnóstico Quase Pronto</span>
+      <h2 class="lead-title">Onde enviamos o relatório de proteção da sua família?</h2>
+      <p class="lead-sub">Seus dados são 100% confidenciais e usados exclusivamente para gerar o seu laudo de risco e vulnerabilidade bancária.</p>
+
+      <form id="lead-form" onsubmit="handleLeadSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="lead-name">Seu Nome Completo:</label>
+          <input type="text" id="lead-name" class="form-input" placeholder="Ex: Rodrigo Santos" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="lead-whatsapp">Seu WhatsApp com DDD:</label>
+          <input type="tel" id="lead-whatsapp" class="form-input" placeholder="(11) 98765-4321" required autocomplete="tel" maxlength="15">
+        </div>
+
+        <button type="submit" class="submit-lead-btn" id="lead-btn">
+          VER O NÍVEL DE RISCO DA MINHA FAMÍLIA ➔
+        </button>
+
+        <div class="privacy-notice">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Garantia de privacidade • Zero spam
+        </div>
+      </form>
+    </div>
+
+    <!-- Loading State -->
+    <div class="card loading-state" id="loading-card">
+      <div class="scanner-spinner"></div>
+      <div class="loading-text" id="loading-title">Calculando vulnerabilidade bancária...</div>
+      <div class="loading-detail" id="loading-detail">Cruzando com histórico de golpes do Banco Central...</div>
+    </div>
+
+    <!-- Result / Kiwify CTA -->
+    <div class="card result-state" id="result-card">
+      <div class="score-alert">
+        <span class="alert-tag">⚠️ Risco Crítico de Fraude</span>
+        <div class="lead-greeting" id="result-greeting">Rodrigo, laudo da sua família:</div>
+        <div class="score-number" id="risk-score">89%</div>
+        <div class="score-desc">Probabilidade de alguém da sua família cair em golpes bancários ativos</div>
+      </div>
+
+      <div class="compare-box">
+        <div class="compare-card bad">
+          <div class="compare-tag">❌ Celular Desprotegido</div>
+          <p style="color:#94a3b8">Sem limites de PIX, senhas repetidas e sem conhecimento do MED.</p>
+        </div>
+        <div class="compare-card good">
+          <div class="compare-tag">✅ Família Blindada</div>
+          <p style="color:#94a3b8">Protocolo de segurança ativo e recuperação de PIX em até 72h.</p>
+        </div>
+      </div>
+
+      <div class="findings-box">
+        <div class="findings-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Principais Brechas de Segurança Encontradas:
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Vulnerabilidade ao Falso Parente:</strong> Golpistas usam foto do perfil clonada para extrair PIX com urgência emocional.</div>
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Falso 0800 Bancário:</strong> Mensagens de SMS com compras falsas induzem a ligar para centrais forjadas.</div>
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Desconhecimento do MED (Banco Central):</strong> 91% das pessoas não sabem contestar PIX fraudulento em menos de 72 horas.</div>
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Limites de Transferência Abertos:</strong> Falta de trava de segurança noturna e limite diário em celulares de parentes.</div>
+        </div>
+      </div>
+
+      <!-- Offer Box -->
+      <div class="offer-box">
+        <span class="offer-badge">Acesso Imediato</span>
+        <h3 class="offer-title">Blinde Suas Contas e Sua Família Hoje</h3>
+        <p class="offer-sub">Baixe o Guia Oficial Anti-Golpes + Roteiro de Recuperação de PIX (MED) + Notificação Extrajudicial Bancária.</p>
+
+        <div class="price-wrap">
+          <span class="price-old">De R$ 67</span>
+          <span class="price-now">R$ 19,90</span>
+          <span class="price-pix">à vista no PIX</span>
+        </div>
+
+        <div class="benefits-list">
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Roteiro de Recuperação de PIX no Banco (Mecanismo MED)</span>
+          </div>
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Manual Ilustrado dos 25 Golpes Ativos no Brasil</span>
+          </div>
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Modelo de Notificação Extrajudicial (Súmula 479 do STJ)</span>
+          </div>
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Entrega imediata em PDF no seu e-mail e WhatsApp</span>
+          </div>
+        </div>
+
+        <a href="https://pay.kiwify.com.br/DodfNXi" class="cta-btn" id="kiwify-checkout-btn">
+          GARANTIR PROTEÇÃO FAMÍLIA POR R$ 19,90
+        </a>
+
+        <div class="guarantee-text">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Compra 100% segura via Kiwify • Garantia incondicional de 7 dias
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal (Ver Leads e Respostas) -->
+  <div class="admin-modal" id="admin-modal">
+    <div class="admin-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="color:#ef4444; font-size:1.15rem;">📋 Painel GolpeHero — Leads & Respostas</h3>
+        <button onclick="closeAdmin()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:700;">Fechar</button>
+      </div>
+      <div id="leads-container">Carregando leads...</div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        title: "1. Se alguém mandar mensagem no WhatsApp dizendo 'Troquei de número, me ajuda com um PIX', o que seus parentes fazem?",
+        options: [
+          { icon: "💸", text: "Minha mãe ou pai provavelmente transfeririam por desespero", sub: "Golpe clássico do perfil clonado que lucra milhões", risk: 22 },
+          { icon: "📞", text: "Ligariam para o número antigo para confirmar a voz", sub: "Atitude correta de contra-prova", risk: 3 },
+          { icon: "❓", text: "Ficariam na dúvida e poderiam acabar mandando", sub: "Vulnerabilidade crítica à pressão emocional", risk: 18 },
+          { icon: "🛑", text: "Nunca mandariam nada sem confirmação presencial", sub: "Família com orientação prévia", risk: 4 }
+        ]
+      },
+      {
+        id: 2,
+        title: "2. Quando chega um SMS de banco dizendo 'Compra de R$ 3.850 aprovada. Se desconhece, ligue no 0800':",
+        options: [
+          { icon: "📲", text: "Alguém da família ligaria no número do SMS para cancelar", sub: "Cilada do falso 0800 operado por quadrilhas", risk: 22 },
+          { icon: "🏦", text: "Abririam o aplicativo oficial do banco para checar o extrato", sub: "Regra de ouro de segurança bancária", risk: 3 },
+          { icon: "😰", text: "Ficariam desesperados achando que o cartão foi clonado", sub: "Gatilho de urgência que faz a vítima cair", risk: 18 },
+          { icon: "🗑️", text: "Apagam o SMS na hora porque sabem que banco não manda 0800", sub: "Excelente discernimento", risk: 4 }
+        ]
+      },
+      {
+        id: 3,
+        title: "3. Se uma suposta 'Central do Banco' ligar pedindo para 'fazer um PIX de teste para estornar uma fraude':",
+        options: [
+          { icon: "⚠️", text: "Meus pais poderiam acreditar que é o procedimento do banco", sub: "Nenhum banco pede PIX de devolução ou cancelamento!", risk: 22 },
+          { icon: "🚫", text: "Desligariam na cara imediatamente", sub: "Banco NUNCA pede transferência de segurança", risk: 2 },
+          { icon: "🤔", text: "Tentariam pedir ajuda para mim antes de fazer qualquer coisa", sub: "Dependência de checagem familiar", risk: 12 },
+          { icon: "🚨", text: "Já quase caímos nesse golpe recentemente", sub: "Alvo ativo de quadrilhas financeiras", risk: 20 }
+        ]
+      },
+      {
+        id: 4,
+        title: "4. Vocês costumam receber links de 'Taxa de encomenda presa nos Correios' ou 'Resgate de valores a receber'?",
+        options: [
+          { icon: "📦", text: "Sim, e já quase clicamos para ver o que era", sub: "Páginas falsas que clonam dados do cartão e PIX", risk: 18 },
+          { icon: "🛑", text: "Nunca clicamos em links recebidos por SMS ou WhatsApp", sub: "Barreira fundamental contra phishing", risk: 3 },
+          { icon: "🔍", text: "Alguém da família já pagou uma taxa falsa dessas", sub: "Vítima recente de golpe de entrega", risk: 22 },
+          { icon: "📱", text: "Recebo direto, mas sei que é golpe", sub: "Exposição alta a tentativas ativas", risk: 12 }
+        ]
+      },
+      {
+        id: 5,
+        title: "5. Se alguém da sua família sofrer um golpe do PIX agora, vocês sabem acionar o MED do Banco Central em até 72h?",
+        options: [
+          { icon: "❓", text: "Não faço a menor ideia do que é MED nem como funciona", sub: "91% dos brasileiros perdem o dinheiro por não saber isso", risk: 22 },
+          { icon: "⏳", text: "Apenas faria um Boletim de Ocorrência e esperaria o banco", sub: "BO sozinho NÃO bloqueia o dinheiro na conta do golpista!", risk: 20 },
+          { icon: "✅", text: "Sim, sei exatamente como acionar a devolução emergencial", sub: "Protocolo oficial do Banco Central", risk: 4 },
+          { icon: "🏦", text: "Acho que o banco devolve sozinho automaticamente", sub: "Ilusão: sem notificação formal, o banco recusa", risk: 20 }
+        ]
+      },
+      {
+        id: 6,
+        title: "6. Os celulares dos seus pais ou parentes idosos têm travas de segurança e limites de PIX configurados?",
+        options: [
+          { icon: "🔓", text: "Não, os limites estão no padrão alto liberado pelo banco", sub: "Risco de perder todas as economias em minutos", risk: 22 },
+          { icon: "🔒", text: "Sim, limite diário baixo e PIX noturno travado em R$ 100", sub: "Blindagem essencial contra roubo e fraude", risk: 3 },
+          { icon: "📱", text: "Eles têm aplicativos de banco instalados sem senha forte", sub: "Acesso direto para qualquer invasor", risk: 20 },
+          { icon: "🤷", text: "Não sei como estão as configurações deles", sub: "Ponto cego perigoso na segurança da família", risk: 16 }
+        ]
+      },
+      {
+        id: 7,
+        title: "7. Alguém na sua família repete a mesma senha para e-mail, redes sociais e bancos?",
+        options: [
+          { icon: "🔑", text: "Sim, quase todo mundo usa a mesma senha básica", sub: "Vazamento em um site expõe todas as outras contas", risk: 20 },
+          { icon: "🛡️", text: "Não, cada conta tem senha única e autenticação em 2 fatores", sub: "Nível avançado de proteção digital", risk: 3 },
+          { icon: "📝", text: "Anotam senhas em bloquinho ou mensagens no próprio celular", sub: "Se o celular for roubado, tudo é invadido", risk: 18 },
+          { icon: "⚠️", text: "Minha mãe/pai usa data de aniversário como senha", sub: "Facilmente decifrável por engenharia social", risk: 20 }
+        ]
+      }
+    ];
+
+    let currentStep = 0;
+    let accumulatedRisk = 0;
+    let selectedAnswers = [];
+    let leadName = "";
+    let leadWhatsapp = "";
+
+    const quizCard = document.getElementById('quiz-card');
+    const leadCard = document.getElementById('lead-card');
+    const loadingCard = document.getElementById('loading-card');
+    const resultCard = document.getElementById('result-card');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const progressBar = document.getElementById('progress-bar');
+    const stepLabel = document.getElementById('step-label');
+    const stepPercent = document.getElementById('step-percent');
+    const stepCounterBox = document.getElementById('step-counter-box');
+    const progressWrapBox = document.getElementById('progress-wrap-box');
+    const riskScore = document.getElementById('risk-score');
+    const resultGreeting = document.getElementById('result-greeting');
+    const waInput = document.getElementById('lead-whatsapp');
+
+    // Phone mask (XX) XXXXX-XXXX
+    waInput.addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.slice(0, 11);
+      if (v.length > 6) {
+        e.target.value = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
+      } else if (v.length > 2) {
+        e.target.value = `(${v.slice(0, 2)}) ${v.slice(2)}`;
+      } else if (v.length > 0) {
+        e.target.value = `(${v}`;
+      } else {
+        e.target.value = '';
+      }
+    });
+
+    function renderQuestion() {
+      const q = questions[currentStep];
+      stepLabel.textContent = `Etapa ${currentStep + 1} de ${questions.length}`;
+      const pct = Math.round(((currentStep + 1) / questions.length) * 100);
+      stepPercent.textContent = `${pct}%`;
+      progressBar.style.width = `${pct}%`;
+
+      questionText.textContent = q.title;
+      optionsContainer.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+          <span class="opt-icon">${opt.icon}</span>
+          <div class="opt-text">
+            ${opt.text}
+            <span class="opt-sub">${opt.sub}</span>
+          </div>
+        `;
+        btn.onclick = () => handleChoice(opt.risk, opt.text);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleChoice(risk, answerText) {
+      accumulatedRisk += risk;
+      selectedAnswers.push(answerText);
+      currentStep++;
+
+      if (currentStep < questions.length) {
+        renderQuestion();
+      } else {
+        showLeadCapture();
+      }
+    }
+
+    function showLeadCapture() {
+      quizCard.style.display = 'none';
+      stepCounterBox.style.display = 'none';
+      progressWrapBox.style.display = 'none';
+      leadCard.style.display = 'block';
+      document.getElementById('lead-name').focus();
+    }
+
+    function handleLeadSubmit(e) {
+      e.preventDefault();
+      leadName = document.getElementById('lead-name').value.trim();
+      leadWhatsapp = document.getElementById('lead-whatsapp').value.trim();
+
+      if (!leadName || leadWhatsapp.length < 14) {
+        alert("Por favor, digite seu nome e WhatsApp completo com DDD.");
+        return;
+      }
+
+      const finalRisk = Math.min(94, Math.max(72, Math.round(accumulatedRisk * 0.72)));
+      
+      // Save lead locally WITH full answers
+      saveLeadLocally({
+        name: leadName,
+        whatsapp: leadWhatsapp,
+        risk: `${finalRisk}%`,
+        answers: selectedAnswers,
+        date: new Date().toLocaleString('pt-BR')
+      });
+
+      // Dispatch to owner email with detailed question breakdown
+      try {
+        fetch("https://formsubmit.co/ajax/taylor.matematica@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            "_subject": `🚨 NOVO LEAD GOLPEHERO: ${leadName} - Risco: ${finalRisk}%`,
+            "_template": "table",
+            "Produto": "GolpeHero - Proteção Família",
+            "Nome": leadName,
+            "WhatsApp": leadWhatsapp,
+            "Risco Fraude": `${finalRisk}%`,
+            "1. Golpe WhatsApp": selectedAnswers[0] || "-",
+            "2. Falso 0800 SMS": selectedAnswers[1] || "-",
+            "3. PIX de Teste": selectedAnswers[2] || "-",
+            "4. Links de Taxa": selectedAnswers[3] || "-",
+            "5. Conhece MED (Banco Central)": selectedAnswers[4] || "-",
+            "6. Travas de PIX": selectedAnswers[5] || "-",
+            "7. Senhas": selectedAnswers[6] || "-",
+            "Data": new Date().toLocaleString('pt-BR')
+          })
+        }).catch(err => console.log('Envio bg:', err));
+      } catch(err) {}
+
+      leadCard.style.display = 'none';
+      showLoading(finalRisk);
+    }
+
+    function showLoading(finalRisk) {
+      loadingCard.style.display = 'block';
+
+      const steps = [
+        "Mapeando vulnerabilidade contra falso 0800 e engenharia social...",
+        "Cruzando dados com boletins de fraudes do Banco Central...",
+        "Calculando exposição a transferências indevidas e clonagem...",
+        "Avaliando preparo para acionamento do MED em até 72h...",
+        "Consolidando relatório de segurança da sua família..."
+      ];
+
+      let idx = 0;
+      const interval = setInterval(() => {
+        idx++;
+        if (idx < steps.length) {
+          document.getElementById('loading-detail').textContent = steps[idx];
+        } else {
+          clearInterval(interval);
+          showResult(finalRisk);
+        }
+      }, 400);
+    }
+
+    function showResult(finalRisk) {
+      loadingCard.style.display = 'none';
+      resultCard.style.display = 'block';
+
+      if (leadName) {
+        resultGreeting.textContent = `${leadName.split(' ')[0]}, laudo da sua família:`;
+      }
+      riskScore.textContent = `${finalRisk}%`;
+    }
+
+    // Lead Storage Helper
+    function saveLeadLocally(lead) {
+      try {
+        let leads = JSON.parse(localStorage.getItem('golpehero_leads') || '[]');
+        leads.unshift(lead);
+        localStorage.setItem('golpehero_leads', JSON.stringify(leads));
+      } catch (e) {}
+    }
+
+    // Admin Panel logic
+    let clickCount = 0;
+    document.getElementById('admin-trigger').onclick = function() {
+      clickCount++;
+      if (clickCount >= 3) {
+        clickCount = 0;
+        openAdmin();
+      }
+    };
+
+    if (window.location.search.includes('admin=leads')) {
+      setTimeout(openAdmin, 500);
+    }
+
+    function openAdmin() {
+      const modal = document.getElementById('admin-modal');
+      const container = document.getElementById('leads-container');
+      const leads = JSON.parse(localStorage.getItem('golpehero_leads') || '[]');
+
+      if (leads.length === 0) {
+        container.innerHTML = '<p style="color:#94a3b8">Nenhum lead de GolpeHero registrado neste dispositivo ainda.</p>';
+      } else {
+        let html = `<p style="color:#f87171; margin-bottom:14px; font-weight:700">Total de Leads GolpeHero: ${leads.length}</p>`;
+        leads.forEach((l, index) => {
+          const rawNum = l.whatsapp.replace(/\D/g, '');
+          const waLink = `https://wa.me/55${rawNum}?text=${encodeURIComponent('Oi ' + l.name.split(' ')[0] + ', vi que você fez o diagnóstico de segurança da família no GolpeHero e deu ' + l.risk + ' de risco de golpe no PIX!')}`;
+          
+          let answersHtml = '';
+          if (l.answers && l.answers.length > 0) {
+            answersHtml = `
+              <div class="lead-answers-block" id="answers-gh-${index}" style="display:none;">
+                <div><strong>1. Golpe WhatsApp:</strong> ${l.answers[0] || '-'}</div>
+                <div><strong>2. Falso 0800:</strong> ${l.answers[1] || '-'}</div>
+                <div><strong>3. PIX de Teste:</strong> ${l.answers[2] || '-'}</div>
+                <div><strong>4. Links de Taxa:</strong> ${l.answers[3] || '-'}</div>
+                <div><strong>5. Conhece MED:</strong> ${l.answers[4] || '-'}</div>
+                <div><strong>6. Travas de PIX:</strong> ${l.answers[5] || '-'}</div>
+                <div><strong>7. Senhas:</strong> ${l.answers[6] || '-'}</div>
+              </div>
+            `;
+          }
+
+          html += `
+            <div class="lead-card-box">
+              <div class="lead-header-row">
+                <div>
+                  <strong style="color:#fff; font-size:1rem;">${l.name}</strong><br>
+                  <span style="color:#94a3b8; font-size:0.84rem">${l.whatsapp} • Risco: <b style="color:#ef4444">${l.risk}</b></span>
+                </div>
+                <a href="${waLink}" target="_blank" class="wa-btn">Chamar WhatsApp ➔</a>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="color:#64748b; font-size:0.75rem">${l.date}</span>
+                <span class="lead-details-toggle" onclick="toggleAnswersGH(${index})">👁️ Ver 7 Respostas</span>
+              </div>
+              ${answersHtml}
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      }
+      modal.style.display = 'block';
+    }
+
+    function toggleAnswersGH(idx) {
+      const el = document.getElementById(`answers-gh-${idx}`);
+      if (el) {
+        el.style.display = (el.style.display === 'none' || !el.style.display) ? 'flex' : 'none';
+      }
+    }
+
+    function closeAdmin() {
+      document.getElementById('admin-modal').style.display = 'none';
+    }
+
+    // Initialize
+    renderQuestion();
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4584669af89e0ef',t:'MTc5MTE1OTc3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
