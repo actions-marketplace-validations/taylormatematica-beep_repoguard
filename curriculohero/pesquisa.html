@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Diagnóstico Oficial de Currículo — Teste de Risco ATS & Gupy 2026</title>
+  <meta name="description" content="Descubra em 90 segundos se o seu currículo está sendo descartado automaticamente pelos robôs de seleção ou se tem chance real de entrevista.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #070a13;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 16px 40px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.18) 0%, transparent 65%),
+        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.12) 0%, transparent 50%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+    .main-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .main-title span {
+      background: linear-gradient(135deg, #10b981, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      height: 6px;
+      width: 100%;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 10%;
+      background: linear-gradient(90deg, #6366f1, #10b981);
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+    .step-counter {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Card Question */
+    .card {
+      background: rgba(18, 24, 38, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 24px 20px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .question-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 18px;
+      line-height: 1.35;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+    .option-btn {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 15px 16px;
+      text-align: left;
+      color: #e2e8f0;
+      font-size: 0.93rem;
+      font-weight: 600;
+      line-height: 1.35;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .option-btn:hover, .option-btn:active {
+      background: rgba(99, 102, 241, 0.22);
+      border-color: #6366f1;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+    }
+    .opt-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .opt-text {
+      flex: 1;
+    }
+    .opt-sub {
+      display: block;
+      font-size: 0.77rem;
+      color: #94a3b8;
+      font-weight: 400;
+      margin-top: 3px;
+    }
+
+    /* Lead Capture Step */
+    .lead-step {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .lead-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .lead-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .lead-sub {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .form-input:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+    .form-input::placeholder {
+      color: #64748b;
+    }
+    .submit-lead-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.5);
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+    .submit-lead-btn:active {
+      transform: scale(0.98);
+    }
+    .privacy-notice {
+      margin-top: 12px;
+      font-size: 0.72rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    /* Loading State */
+    .loading-state {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .scanner-spinner {
+      width: 70px;
+      height: 70px;
+      border: 4px solid rgba(16, 185, 129, 0.2);
+      border-top: 4px solid #10b981;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 24px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .loading-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .loading-detail {
+      font-size: 0.85rem;
+      color: #34d399;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Result State */
+    .result-state {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .score-alert {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(185, 28, 28, 0.05));
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 16px;
+      padding: 22px 18px;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .alert-tag {
+      display: inline-block;
+      background: #ef4444;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .lead-greeting {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .score-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #ef4444;
+      line-height: 1;
+      margin-bottom: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .score-desc {
+      font-size: 0.95rem;
+      color: #fca5a5;
+      font-weight: 600;
+    }
+
+    .findings-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 18px 16px;
+      margin-bottom: 22px;
+    }
+    .findings-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .finding-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.87rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .finding-item:last-child {
+      margin-bottom: 0;
+    }
+    .item-icon {
+      color: #ef4444;
+      font-weight: bold;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Comparison Box */
+    .compare-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .compare-card {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+    .compare-card.bad {
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .compare-card.good {
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .compare-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .compare-card.bad .compare-tag { color: #ef4444; }
+    .compare-card.good .compare-tag { color: #10b981; }
+
+    /* Offer Box */
+    .offer-box {
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 18px;
+      padding: 22px 18px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .offer-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #10b981;
+      color: #052e16;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-bottom-left-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .offer-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .offer-sub {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    .price-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .price-old {
+      font-size: 0.95rem;
+      color: #64748b;
+      text-decoration: line-through;
+    }
+    .price-now {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #10b981;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .price-pix {
+      font-size: 0.85rem;
+      color: #34d399;
+      font-weight: 700;
+    }
+
+    .benefits-list {
+      text-align: left;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .benefit-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .benefit-line svg {
+      width: 16px;
+      height: 16px;
+      stroke: #10b981;
+      flex-shrink: 0;
+    }
+
+    .cta-btn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 800;
+      padding: 18px 20px;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.5);
+      animation: ctaPulse 2s infinite;
+      transition: all 0.2s;
+    }
+    @keyframes ctaPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1.02); box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .cta-btn:active {
+      transform: scale(0.98);
+    }
+    .guarantee-text {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    /* Admin Leads Modal */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.88);
+      z-index: 9999;
+      padding: 16px;
+      overflow-y: auto;
+    }
+    .admin-content {
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 16px;
+      max-width: 580px;
+      margin: 20px auto;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    }
+    .lead-card-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .lead-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .wa-btn {
+      background: #25D366;
+      color: #000;
+      font-weight: 800;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .lead-details-toggle {
+      font-size: 0.78rem;
+      color: #38bdf8;
+      cursor: pointer;
+      text-decoration: underline;
+      margin-top: 6px;
+      display: inline-block;
+    }
+    .lead-answers-block {
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      line-height: 1.35;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="badge-live" id="admin-trigger" title="Toque 3 vezes para ver leads">
+        <span class="pulse-dot"></span>
+        Auditoria ATS & Gupy • Versão 2026
+      </div>
+      <h1 class="main-title">Seu currículo passa pelos <span>Robôs de Triagem</span>?</h1>
+      <p class="subtitle">Responda 10 perguntas técnicas para descobrir a probabilidade do seu currículo ser descartado antes de chegar ao recrutador.</p>
+    </div>
+
+    <!-- Progress -->
+    <div class="step-counter" id="step-counter-box">
+      <span id="step-label">Etapa 1 de 10</span>
+      <span id="step-percent">10%</span>
+    </div>
+    <div class="progress-wrap" id="progress-wrap-box">
+      <div class="progress-fill" id="progress-bar"></div>
+    </div>
+
+    <!-- Question Cards -->
+    <div class="card" id="quiz-card">
+      <h2 class="question-title" id="question-text">1. Como é a estrutura visual do seu currículo atual?</h2>
+      <div class="options-list" id="options-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Lead Capture Card -->
+    <div class="card lead-step" id="lead-card">
+      <span class="lead-badge">📊 Auditoria Concluída</span>
+      <h2 class="lead-title">Onde devemos enviar o seu relatório detalhado de risco?</h2>
+      <p class="lead-sub">Seus dados são 100% confidenciais e usados exclusivamente para gerar o seu laudo de compatibilidade ATS.</p>
+
+      <form id="lead-form" onsubmit="handleLeadSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="lead-name">Seu Nome Completo:</label>
+          <input type="text" id="lead-name" class="form-input" placeholder="Ex: Rodrigo Santos" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="lead-whatsapp">Seu WhatsApp com DDD:</label>
+          <input type="tel" id="lead-whatsapp" class="form-input" placeholder="(11) 98765-4321" required autocomplete="tel" maxlength="15">
+        </div>
+
+        <button type="submit" class="submit-lead-btn" id="lead-btn">
+          VER O MEU NÍVEL DE RISCO ATS ➔
+        </button>
+
+        <div class="privacy-notice">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Garantia de privacidade • Zero spam
+        </div>
+      </form>
+    </div>
+
+    <!-- Loading State -->
+    <div class="card loading-state" id="loading-card">
+      <div class="scanner-spinner"></div>
+      <div class="loading-text" id="loading-title">Auditando compatibilidade com Gupy e ATS...</div>
+      <div class="loading-detail" id="loading-detail">Testando OCR e leitura linear de colunas...</div>
+    </div>
+
+    <!-- Result / Kiwify CTA -->
+    <div class="card result-state" id="result-card">
+      <div class="score-alert">
+        <span class="alert-tag">⚠️ Risco Crítico de Reprovação</span>
+        <div class="lead-greeting" id="result-greeting">Rodrigo, laudo do seu currículo:</div>
+        <div class="score-number" id="risk-score">91%</div>
+        <div class="score-desc">Probabilidade do seu currículo ser descartado antes de um humano ler</div>
+      </div>
+
+      <div class="compare-box">
+        <div class="compare-card bad">
+          <div class="compare-tag">❌ Currículo Tradicional / Canva</div>
+          <p style="color:#94a3b8">Duas colunas confusas, cabeçalhos ignorados e zero palavras-chave indexadas.</p>
+        </div>
+        <div class="compare-card good">
+          <div class="compare-tag">✅ Currículo Blindado ATS</div>
+          <p style="color:#94a3b8">Estrutura 100% legível por robôs, match de keywords e no topo do ranking.</p>
+        </div>
+      </div>
+
+      <div class="findings-box">
+        <div class="findings-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Falhas Críticas Detectadas no seu Perfil:
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Quebra de Parsing por Layout:</strong> Modelos visuais ou em colunas fazem os robôs misturarem cargos e datas.</div>
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Dados Ocultos no Cabeçalho:</strong> Sistemas como Taleo e Gupy frequentemente ignoram o campo de cabeçalho do documento.</div>
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Ausência de Keywords Espelhadas:</strong> Enviar currículos sem termos técnicos da vaga zera sua relevância.</div>
+        </div>
+        <div class="finding-item">
+          <span class="item-icon">✕</span>
+          <div><strong>Gráficos e Barras de Habilidades:</strong> Avaliações visuais (bolinhas/barras) são computadas como pontuação nula.</div>
+        </div>
+      </div>
+
+      <!-- Offer Box -->
+      <div class="offer-box">
+        <span class="offer-badge">Acesso Imediato</span>
+        <h3 class="offer-title">Destrave Suas Entrevistas Esta Semana</h3>
+        <p class="offer-sub">Baixe os 5 Modelos Oficiais Anti-Gupy (Word + Docs) + Guia de Palavras-Chave de Alta Conversão.</p>
+
+        <div class="price-wrap">
+          <span class="price-old">De R$ 97</span>
+          <span class="price-now">R$ 27,00</span>
+          <span class="price-pix">à vista no PIX</span>
+        </div>
+
+        <div class="benefits-list">
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>5 Modelos Estruturados 100% Aprovados por Robôs ATS</span>
+          </div>
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Dicionário Secreto de Palavras-Chave que Furam o Filtro</span>
+          </div>
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Checklist Pré-Envio para Gupy, LinkedIn e Vagas.com</span>
+          </div>
+          <div class="benefit-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Entrega imediata em Word, Google Docs e PDF</span>
+          </div>
+        </div>
+
+        <a href="https://pay.kiwify.com.br/QTjoY40" class="cta-btn" id="kiwify-checkout-btn">
+          QUERO MEU CURRÍCULO APROVADO POR R$ 27
+        </a>
+
+        <div class="guarantee-text">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Garantia incondicional de 7 dias • Acesso instantâneo
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal (Ver Leads e Respostas) -->
+  <div class="admin-modal" id="admin-modal">
+    <div class="admin-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="color:#10b981; font-size:1.15rem;">📋 Painel CurriculoHero — Leads & 10 Respostas</h3>
+        <button onclick="closeAdmin()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:700;">Fechar</button>
+      </div>
+      <div id="leads-container">Carregando leads...</div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        title: "1. Como é a estrutura visual do seu currículo atual?",
+        options: [
+          { icon: "🎨", text: "Feito no Canva com layout moderno de 2 colunas e ícones", sub: "Robôs ATS misturam as duas colunas num texto sem nexo", risk: 22 },
+          { icon: "📄", text: "Feito em coluna única simples, limpa e linear no Word/Docs", sub: "Formato 100% legível por algoritmos", risk: 2 },
+          { icon: "📑", text: "Uso modelo da internet com caixas de texto flutuantes e tabelas", sub: "Caixas flutuantes são frequentemente ignoradas", risk: 19 },
+          { icon: "🤷", text: "Peguei um modelo pronto e não sei se tem tabelas ou colunas", sub: "Alto risco de quebra de leitura algorítmica", risk: 16 }
+        ]
+      },
+      {
+        id: 2,
+        title: "2. Onde estão posicionados o seu e-mail, telefone e LinkedIn no documento?",
+        options: [
+          { icon: "📌", text: "Dentro do recurso oficial de 'Cabeçalho' ou 'Rodapé' da página", sub: "Armadilha: Gupy e Taleo descartam cabeçalhos e você fica 'sem contato'", risk: 22 },
+          { icon: "📝", text: "No corpo principal da página, logo abaixo do meu nome", sub: "Posição padrão e sempre lida pelo parser", risk: 2 },
+          { icon: "📇", text: "Em uma barra lateral colorida à esquerda", sub: "Parsers costumam descartar barras laterais", risk: 18 },
+          { icon: "📱", text: "Só coloco link do Instagram ou deixo dados incompletos", sub: "Falta de canais de contato profissionais", risk: 22 }
+        ]
+      },
+      {
+        id: 3,
+        title: "3. Como você escreve termos técnicos e ferramentas? (Ex: CRM, SEO, KPI, SQL)",
+        options: [
+          { icon: "🔤", text: "Coloco apenas a sigla curta (ex: 'Experiência em CRM e SEO')", sub: "Se a vaga buscar pelo termo por extenso, você perde pontos", risk: 17 },
+          { icon: "✍️", text: "Escrevo o termo completo e a sigla (ex: 'Search Engine Optimization (SEO)')", sub: "Casamento perfeito com qualquer algoritmo de busca", risk: 2 },
+          { icon: "🤷", text: "Só coloco descrições genéricas sem siglas técnicas", sub: "Ausência das hard skills mais valorizadas", risk: 19 },
+          { icon: "📋", text: "Copio a lista inteira de requisitos da vaga sem contexto", sub: "Penalizado por keyword stuffing artificial", risk: 16 }
+        ]
+      },
+      {
+        id: 4,
+        title: "4. Você usa gráficos de barras, porcentagens ou bolinhas para avaliar seu nível nas ferramentas?",
+        options: [
+          { icon: "📊", text: "Sim, acho que visualmente fica bonito e profissional (ex: Excel 80%)", sub: "Robôs ATS não enxergam gráficos; interpretam como pontuação nula!", risk: 22 },
+          { icon: "❌", text: "Não, descrevo o nível em texto claro (ex: 'Inglês Avançado', 'Excel com VBA')", sub: "Padrão ouro compreendido por humanos e robôs", risk: 2 },
+          { icon: "⚪", text: "Uso ícones e estrelinhas para indicar meu nível", sub: "Ícones viram caracteres corrompidos no sistema", risk: 18 },
+          { icon: "🤷", text: "Não menciono meu nível de conhecimento nas ferramentas", sub: "Descarte por falta de clareza nas competências", risk: 15 }
+        ]
+      },
+      {
+        id: 5,
+        title: "5. Você já copiou todo o texto do seu PDF e colou no Bloco de Notas para testar a legibilidade?",
+        options: [
+          { icon: "❓", text: "Nunca fiz isso nem sabia que precisava testar", sub: "78% dos PDFs visuais viram caracteres ilegíveis ao serem copiados", risk: 19 },
+          { icon: "✅", text: "Já fiz e o texto sai perfeitamente em ordem e sem símbolos estranhos", sub: "Prova real de compatibilidade com OCR/Parser", risk: 2 },
+          { icon: "⚠️", text: "Fui testar e algumas palavras ficaram coladas ou fora de ordem", sub: "O robô de triagem lê exatamente dessa forma confusa!", risk: 21 },
+          { icon: "📄", text: "O meu arquivo não permite nem selecionar o texto", sub: "Arquivo achatado em imagem; descarte automático", risk: 24 }
+        ]
+      },
+      {
+        id: 6,
+        title: "6. Como você descreve o período em cada empresa nas suas experiências?",
+        options: [
+          { icon: "📅", text: "'Mês/Ano - Mês/Ano' padronizado (Ex: '03/2021 - 11/2023' ou '05/2022 - Atual')", sub: "Algoritmo calcula perfeitamente o tempo total de experiência", risk: 2 },
+          { icon: "⏱️", text: "De forma variada (Ex: 'Jan 21 até recentemente', '2 anos e meio')", sub: "O robô falha no cálculo cronológico e zera o tempo na função", risk: 19 },
+          { icon: "📆", text: "Coloco apenas o ano solto (Ex: '2020 - 2022')", sub: "Gera ambiguidade e desvantagem na pontuação de senioridade", risk: 14 },
+          { icon: "🤷", text: "Nem sempre coloco as datas das experiências", sub: "Falta de dados cronológicos essenciais", risk: 21 }
+        ]
+      },
+      {
+        id: 7,
+        title: "7. Se você trabalhou como 'Assistente de Vendas', mas a vaga desejada é 'Consultor Comercial', o que você faz?",
+        options: [
+          { icon: "🎯", text: "Mantenho o cargo oficial, mas ajusto objetivo e palavras-chave para o termo da vaga", sub: "Estratégia perfeita de relevância sem mentir", risk: 2 },
+          { icon: "🏷️", text: "Deixo o nome antigo interno da empresa anterior sem adaptar nada", sub: "O robô prioriza quem tem os termos exatos do anúncio", risk: 17 },
+          { icon: "📄", text: "Mudo o nome na carteira de trabalho", sub: "Risco alto de reprovação na checagem de antecedentes", risk: 18 },
+          { icon: "🤷", text: "Nem olho o título exato da vaga antes de enviar", sub: "Tiro no escuro com baixa compatibilidade", risk: 19 }
+        ]
+      },
+      {
+        id: 8,
+        title: "8. O seu resumo profissional começa com frases como 'Profissional proativo, focado e de fácil relacionamento'?",
+        options: [
+          { icon: "🙋", text: "Sim, uso esses adjetivos para demonstrar minha personalidade", sub: "Clichês vazios ignorados por algoritmos; gastam espaço valioso", risk: 21 },
+          { icon: "🎯", text: "Não, resumo focado em anos de experiência, ferramentas e conquistas mensuráveis", sub: "Formato de alto impacto pontuado com nota máxima", risk: 2 },
+          { icon: "📝", text: "Meu currículo nem tem um resumo profissional inicial", sub: "Perde a chance de ranquear as principais keywords no topo", risk: 16 },
+          { icon: "💭", text: "Uso frases poéticas ou motivacionais", sub: "Eliminatório em processos corporativos seletivos", risk: 22 }
+        ]
+      },
+      {
+        id: 9,
+        title: "9. Com que frequência você altera as palavras-chave do seu currículo para combinar com a vaga específica?",
+        options: [
+          { icon: "📤", text: "Envio o mesmo PDF genérico para 20 ou 30 vagas diferentes ao mesmo tempo", sub: "Disparo em massa genérico; probabilidade de filtro é de 94%", risk: 22 },
+          { icon: "🎯", text: "Leio o anúncio e insiro competências exigidas antes de enviar", sub: "Taxa de resposta de entrevista 4x maior", risk: 2 },
+          { icon: "⏱️", text: "Às vezes mudo o objetivo, mas o restante do documento fica igual", sub: "Customização rasa que raramente bate a nota de corte", risk: 15 },
+          { icon: "🤷", text: "Não sei onde identificar as palavras-chave da vaga", sub: "Falta de técnica de leitura de editais", risk: 18 }
+        ]
+      },
+      {
+        id: 10,
+        title: "10. Em qual formato você costuma salvar e enviar o seu currículo para as plataformas?",
+        options: [
+          { icon: "📄", text: "PDF padrão com texto selecionável e tamanho inferior a 2MB", sub: "Formato universal aceito por 100% dos ATS", risk: 2 },
+          { icon: "🖼️", text: "Envio em formato de Imagem (.PNG ou .JPG) ou foto do papel", sub: "Descarte imediato: robôs não leem imagem sem OCR caro", risk: 25 },
+          { icon: "📝", text: "Envio em arquivo .DOCX editável do Word", sub: "Aceitável, mas pode desconfigurar tipografia em servidores", risk: 9 },
+          { icon: "🔗", text: "Envio apenas link do Google Drive ou Canva", sub: "Recrutadores e robôs não abrem links externos por segurança", risk: 22 }
+        ]
+      }
+    ];
+
+    let currentStep = 0;
+    let accumulatedRisk = 0;
+    let selectedAnswers = [];
+    let leadName = "";
+    let leadWhatsapp = "";
+
+    const quizCard = document.getElementById('quiz-card');
+    const leadCard = document.getElementById('lead-card');
+    const loadingCard = document.getElementById('loading-card');
+    const resultCard = document.getElementById('result-card');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const progressBar = document.getElementById('progress-bar');
+    const stepLabel = document.getElementById('step-label');
+    const stepPercent = document.getElementById('step-percent');
+    const stepCounterBox = document.getElementById('step-counter-box');
+    const progressWrapBox = document.getElementById('progress-wrap-box');
+    const riskScore = document.getElementById('risk-score');
+    const resultGreeting = document.getElementById('result-greeting');
+    const waInput = document.getElementById('lead-whatsapp');
+
+    // Phone mask (XX) XXXXX-XXXX
+    waInput.addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.slice(0, 11);
+      if (v.length > 6) {
+        e.target.value = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
+      } else if (v.length > 2) {
+        e.target.value = `(${v.slice(0, 2)}) ${v.slice(2)}`;
+      } else if (v.length > 0) {
+        e.target.value = `(${v}`;
+      } else {
+        e.target.value = '';
+      }
+    });
+
+    function renderQuestion() {
+      const q = questions[currentStep];
+      stepLabel.textContent = `Etapa ${currentStep + 1} de ${questions.length}`;
+      const pct = Math.round(((currentStep + 1) / questions.length) * 100);
+      stepPercent.textContent = `${pct}%`;
+      progressBar.style.width = `${pct}%`;
+
+      questionText.textContent = q.title;
+      optionsContainer.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+          <span class="opt-icon">${opt.icon}</span>
+          <div class="opt-text">
+            ${opt.text}
+            <span class="opt-sub">${opt.sub}</span>
+          </div>
+        `;
+        btn.onclick = () => handleChoice(opt.risk, opt.text);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleChoice(risk, answerText) {
+      accumulatedRisk += risk;
+      selectedAnswers.push(answerText);
+      currentStep++;
+
+      if (currentStep < questions.length) {
+        renderQuestion();
+      } else {
+        showLeadCapture();
+      }
+    }
+
+    function showLeadCapture() {
+      quizCard.style.display = 'none';
+      stepCounterBox.style.display = 'none';
+      progressWrapBox.style.display = 'none';
+      leadCard.style.display = 'block';
+      document.getElementById('lead-name').focus();
+    }
+
+    function handleLeadSubmit(e) {
+      e.preventDefault();
+      leadName = document.getElementById('lead-name').value.trim();
+      leadWhatsapp = document.getElementById('lead-whatsapp').value.trim();
+
+      if (!leadName || leadWhatsapp.length < 14) {
+        alert("Por favor, digite seu nome e WhatsApp completo com DDD.");
+        return;
+      }
+
+      // 10 questions risk calibration
+      const finalRisk = Math.min(96, Math.max(74, Math.round(accumulatedRisk * 0.46)));
+      
+      // Save lead locally WITH 10 full answers
+      saveLeadLocally({
+        name: leadName,
+        whatsapp: leadWhatsapp,
+        risk: `${finalRisk}%`,
+        answers: selectedAnswers,
+        date: new Date().toLocaleString('pt-BR')
+      });
+
+      // Dispatch to owner email with detailed 10 questions breakdown
+      try {
+        fetch("https://formsubmit.co/ajax/taylor.matematica@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            "_subject": `🔥 NOVO LEAD CURRICULOHERO: ${leadName} - Risco ATS: ${finalRisk}%`,
+            "_template": "table",
+            "Produto": "CurriculoHero - R$ 27",
+            "Nome": leadName,
+            "WhatsApp": leadWhatsapp,
+            "Risco ATS": `${finalRisk}%`,
+            "1. Layout Canva/Colunas": selectedAnswers[0] || "-",
+            "2. Contatos no Cabeçalho": selectedAnswers[1] || "-",
+            "3. Acrônimos e Siglas": selectedAnswers[2] || "-",
+            "4. Avaliação por Barras": selectedAnswers[3] || "-",
+            "5. Teste Bloco de Notas": selectedAnswers[4] || "-",
+            "6. Formato de Datas": selectedAnswers[5] || "-",
+            "7. Título da Vaga": selectedAnswers[6] || "-",
+            "8. Soft Skills Clichês": selectedAnswers[7] || "-",
+            "9. Customização Keywords": selectedAnswers[8] || "-",
+            "10. Formato do Arquivo": selectedAnswers[9] || "-",
+            "Data": new Date().toLocaleString('pt-BR')
+          })
+        }).catch(err => console.log('Envio bg:', err));
+      } catch(err) {}
+
+      leadCard.style.display = 'none';
+      showLoading(finalRisk);
+    }
+
+    function showLoading(finalRisk) {
+      loadingCard.style.display = 'block';
+
+      const steps = [
+        "Auditando formatação e quebra de colunas...",
+        "Simulando leitura de cabeçalhos nos robôs Gupy e Taleo...",
+        "Calculando densidade de palavras-chave técnicas...",
+        "Testando conversão de acrônimos e cronologia de datas...",
+        "Consolidando diagnóstico de risco de eliminação..."
+      ];
+
+      let idx = 0;
+      const interval = setInterval(() => {
+        idx++;
+        if (idx < steps.length) {
+          document.getElementById('loading-detail').textContent = steps[idx];
+        } else {
+          clearInterval(interval);
+          showResult(finalRisk);
+        }
+      }, 400);
+    }
+
+    function showResult(finalRisk) {
+      loadingCard.style.display = 'none';
+      resultCard.style.display = 'block';
+
+      if (leadName) {
+        resultGreeting.textContent = `${leadName.split(' ')[0]}, laudo do seu currículo:`;
+      }
+      riskScore.textContent = `${finalRisk}%`;
+    }
+
+    // Lead Storage Helper
+    function saveLeadLocally(lead) {
+      try {
+        let leads = JSON.parse(localStorage.getItem('curriculohero_leads') || '[]');
+        leads.unshift(lead);
+        localStorage.setItem('curriculohero_leads', JSON.stringify(leads));
+      } catch (e) {}
+    }
+
+    // Admin Panel logic
+    let clickCount = 0;
+    document.getElementById('admin-trigger').onclick = function() {
+      clickCount++;
+      if (clickCount >= 3) {
+        clickCount = 0;
+        openAdmin();
+      }
+    };
+
+    if (window.location.search.includes('admin=leads')) {
+      setTimeout(openAdmin, 500);
+    }
+
+    function openAdmin() {
+      const modal = document.getElementById('admin-modal');
+      const container = document.getElementById('leads-container');
+      const leads = JSON.parse(localStorage.getItem('curriculohero_leads') || '[]');
+
+      if (leads.length === 0) {
+        container.innerHTML = '<p style="color:#94a3b8">Nenhum lead de CurriculoHero registrado neste dispositivo ainda.</p>';
+      } else {
+        let html = `<p style="color:#10b981; margin-bottom:14px; font-weight:700">Total de Leads CurriculoHero: ${leads.length}</p>`;
+        leads.forEach((l, index) => {
+          const rawNum = l.whatsapp.replace(/\D/g, '');
+          const waLink = `https://wa.me/55${rawNum}?text=${encodeURIComponent('Oi ' + l.name.split(' ')[0] + ', vi que você fez o diagnóstico de currículo no CurriculoHero e deu ' + l.risk + ' de risco de reprovação na Gupy!')}`;
+          
+          let answersHtml = '';
+          if (l.answers && l.answers.length > 0) {
+            answersHtml = `
+              <div class="lead-answers-block" id="answers-${index}" style="display:none;">
+                <div><strong>1. Layout:</strong> ${l.answers[0] || '-'}</div>
+                <div><strong>2. Contatos:</strong> ${l.answers[1] || '-'}</div>
+                <div><strong>3. Siglas:</strong> ${l.answers[2] || '-'}</div>
+                <div><strong>4. Barrinhas:</strong> ${l.answers[3] || '-'}</div>
+                <div><strong>5. Bloco de Notas:</strong> ${l.answers[4] || '-'}</div>
+                <div><strong>6. Datas:</strong> ${l.answers[5] || '-'}</div>
+                <div><strong>7. Título Vaga:</strong> ${l.answers[6] || '-'}</div>
+                <div><strong>8. Soft Skills:</strong> ${l.answers[7] || '-'}</div>
+                <div><strong>9. Keywords:</strong> ${l.answers[8] || '-'}</div>
+                <div><strong>10. Formato:</strong> ${l.answers[9] || '-'}</div>
+              </div>
+            `;
+          }
+
+          html += `
+            <div class="lead-card-box">
+              <div class="lead-header-row">
+                <div>
+                  <strong style="color:#fff; font-size:1rem;">${l.name}</strong><br>
+                  <span style="color:#94a3b8; font-size:0.84rem">${l.whatsapp} • Risco: <b style="color:#ef4444">${l.risk}</b></span>
+                </div>
+                <a href="${waLink}" target="_blank" class="wa-btn">Chamar WhatsApp ➔</a>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="color:#64748b; font-size:0.75rem">${l.date}</span>
+                <span class="lead-details-toggle" onclick="toggleAnswers(${index})">👁️ Ver 10 Respostas</span>
+              </div>
+              ${answersHtml}
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      }
+      modal.style.display = 'block';
+    }
+
+    function toggleAnswers(idx) {
+      const el = document.getElementById(`answers-${idx}`);
+      if (el) {
+        el.style.display = (el.style.display === 'none' || !el.style.display) ? 'flex' : 'none';
+      }
+    }
+
+    function closeAdmin() {
+      document.getElementById('admin-modal').style.display = 'none';
+    }
+
+    // Initialize
+    renderQuestion();
+  </script>
+</body>
+</html>

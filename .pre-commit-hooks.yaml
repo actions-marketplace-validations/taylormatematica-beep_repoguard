@@ -1,0 +1,7 @@
+- id: repoguard
+  name: RepoGuard Architecture Audit
+  description: Fast architectural linter & guardrail engine for AI-assisted codebases
+  entry: repoguard audit --strict
+  language: node
+  additional_dependencies: ['repoguard-rules@1.6.1']
+  pass_filenames: false
