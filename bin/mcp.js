@@ -108,3 +108,7 @@ function startMCPServer() {
 }
 
 module.exports = { startMCPServer };
+
+if (require.main === module) {
+  startMCPServer();
+}
