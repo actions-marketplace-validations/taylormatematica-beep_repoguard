@@ -1,0 +1,9 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": ["taylormatematica-beep"],
+  "baseImage": "debian:trixie-slim",
+  "nodeVersion": "24",
+  "buildSteps": [],
+  "cmdArguments": ["mcp-proxy", "--", "node", "bin/mcp.js"],
+  "placeholderArguments": {}
+}
